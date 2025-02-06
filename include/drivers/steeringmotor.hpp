@@ -97,8 +97,8 @@ namespace drivers
             // All the values have a scale factor applied (*100)
             const int steeringValueP[3] = {0, 150, 200};
             const int steeringValueN[3] = {0, -150, -200};
-            const int stepValues[3] = {1901, 1718, 1903};
-            const int zeroDefaultValues[3] = {153441, 154297, 153441};
+            const int stepValues[3] = {1901, 1951, 2028};
+            const int zeroDefaultValues[3] = {153441, 153820, 153610};
     }; // class ISteeringCommand
 }; // namespace drivers
 
