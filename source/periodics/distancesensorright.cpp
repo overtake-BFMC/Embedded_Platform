@@ -1,7 +1,7 @@
 #include "periodics/distancesensorright.hpp"
 
 #define speed_of_sound 0.0343   // Speed of sound in cm/μs
-#define _30_chars 30
+#define _18_chars 18
 
 // TODO: Add your code here
 namespace periodics
@@ -22,6 +22,7 @@ namespace periodics
     , m_period(f_period.count())
     , m_isActive(false)
     , m_serial(f_serial)
+    , m_isConnected(true)
     {
         m_triggerPin = 0;
     }
@@ -91,23 +92,29 @@ namespace periodics
 
         // Convert to distance in cm
         m_distance = (pulse_duration * speed_of_sound) / 2;
+
+        if( m_distance > 99 )
+            m_distance = 99;
     }
     /* Run method */
     void CDistancesensorRight::_run()
     {
         /* Run method behaviour */
-        if(!m_isActive) return;
+        if(!m_isActive && !m_isConnected) 
+            return;
 
         if (!isSensorConnected()) {
             //m_serial.write("@distanceF:DISCONNECTED;;\r\n", strlen("@distanceF:DISCONNECTED;;\r\n"));
-            m_isActive = false;
+            m_isConnected = false;
             return;  // Skip measurement if sensor is disconnected
         }
 
         DistanceMeasure();
 
-        char buffer[_30_chars];
+        char buffer[_18_chars];
+        
         snprintf(buffer, sizeof(buffer), "@distanceR:%d;;\r\n", (int)m_distance);
+
         m_serial.write(buffer, strlen(buffer));
     }
 

@@ -35,6 +35,7 @@ namespace periodics
             mbed::DigitalIn m_echoPin;
             uint64_t m_period;
             float m_distance;
+            bool m_isConnected;
 
             /* Run method */
             virtual void        _run();
