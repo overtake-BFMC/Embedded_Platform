@@ -64,9 +64,11 @@ brain::CRobotStateMachine g_robotstatemachine(g_baseTick * 50, g_rpi, g_steering
 
 periodics::CResourcemonitor g_resourceMonitor(g_baseTick * 5000, g_rpi);
 
-periodics::CDistancesensor g_distanceSensor(g_baseTick * 200, D12, D11, g_rpi);
+periodics::CDistancesensorFront g_distanceSensorFront(g_baseTick * 200, D12, D11, g_rpi);
 
-brain::CKlmanager g_klmanager(g_alerts, g_imu, g_instantconsumption, g_totalvoltage, g_robotstatemachine, g_resourceMonitor, g_distanceSensor);
+periodics::CDistancesensorRight g_distanceSensorRight(g_baseTick * 200, D9, D8, g_rpi);
+
+brain::CKlmanager g_klmanager(g_alerts, g_imu, g_instantconsumption, g_totalvoltage, g_robotstatemachine, g_resourceMonitor, g_distanceSensorFront, g_distanceSensorRight);
 
 periodics::CPowermanager g_powermanager(g_baseTick * 100, g_klmanager, g_rpi, g_totalvoltage, g_instantconsumption, g_alerts);
 
@@ -74,21 +76,23 @@ brain::CBatterymanager g_batteryManager(dummy_value);
 
 /* USER NEW COMPONENT BEGIN */
 
+
 /* USER NEW COMPONENT END */
 
 // Map for redirecting messages with the key and the callback functions. If the message key equals to one of the enumerated keys, than it will be applied the paired callback function.
 drivers::CSerialMonitor::CSerialSubscriberMap g_serialMonitorSubscribers = {
-    {"speed",          mbed::callback(&g_robotstatemachine, &brain::CRobotStateMachine::serialCallbackSPEEDcommand)},
-    {"steer",          mbed::callback(&g_robotstatemachine, &brain::CRobotStateMachine::serialCallbackSTEERcommand)},
-    {"brake",          mbed::callback(&g_robotstatemachine, &brain::CRobotStateMachine::serialCallbackBRAKEcommand)},
-    {"vcd",            mbed::callback(&g_robotstatemachine, &brain::CRobotStateMachine::serialCallbackVCDcommand)},
-    {"battery",        mbed::callback(&g_totalvoltage,      &periodics::CTotalVoltage::serialCallbackTOTALVcommand)},
-    {"instant",        mbed::callback(&g_instantconsumption,&periodics::CInstantConsumption::serialCallbackINSTANTcommand)},
-    {"imu",            mbed::callback(&g_imu,               &periodics::CImu::serialCallbackIMUcommand)},
-    {"kl",             mbed::callback(&g_klmanager,         &brain::CKlmanager::serialCallbackKLCommand)},
-    {"batteryCapacity",mbed::callback(&g_batteryManager,    &brain::CBatterymanager::serialCallbackBATTERYCommand)},
-    {"distanceSensor", mbed::callback(&g_distanceSensor,    &periodics::CDistancesensor::serialCallbackDISTANCECommand)},
-    {"resourceMonitor",mbed::callback(&g_resourceMonitor,   &periodics::CResourcemonitor::serialCallbackRESMONCommand),}
+    {"speed",               mbed::callback(&g_robotstatemachine,   &brain::CRobotStateMachine::serialCallbackSPEEDcommand)},
+    {"steer",               mbed::callback(&g_robotstatemachine,   &brain::CRobotStateMachine::serialCallbackSTEERcommand)},
+    {"brake",               mbed::callback(&g_robotstatemachine,   &brain::CRobotStateMachine::serialCallbackBRAKEcommand)},
+    {"vcd",                 mbed::callback(&g_robotstatemachine,   &brain::CRobotStateMachine::serialCallbackVCDcommand)},
+    {"battery",             mbed::callback(&g_totalvoltage,        &periodics::CTotalVoltage::serialCallbackTOTALVcommand)},
+    {"instant",             mbed::callback(&g_instantconsumption,  &periodics::CInstantConsumption::serialCallbackINSTANTcommand)},
+    {"imu",                 mbed::callback(&g_imu,                 &periodics::CImu::serialCallbackIMUcommand)},
+    {"kl",                  mbed::callback(&g_klmanager,           &brain::CKlmanager::serialCallbackKLCommand)},
+    {"batteryCapacity",     mbed::callback(&g_batteryManager,      &brain::CBatterymanager::serialCallbackBATTERYCommand)},
+    {"distanceSensorFront", mbed::callback(&g_distanceSensorFront, &periodics::CDistancesensorFront::serialCallbackDISTANCEFRONTCommand)},
+    {"distanceSensorRight", mbed::callback(&g_distanceSensorRight, &periodics::CDistancesensorRight::serialCallbackDISTANCERIGHTCommand)},
+    {"resourceMonitor",     mbed::callback(&g_resourceMonitor,     &periodics::CResourcemonitor::serialCallbackRESMONCommand),}
 };
 
 // Create the serial monitor object, which decodes, redirects the messages and transmits the responses.
@@ -106,7 +110,8 @@ utils::CTask* g_taskList[] = {
     &g_resourceMonitor,
     &g_alerts,
     // USER NEW PERIODICS BEGIN -
-    &g_distanceSensor,
+    &g_distanceSensorRight,
+    &g_distanceSensorFront,
     
     // USER NEW PERIODICS END
 }; 

@@ -41,7 +41,8 @@
 #include <periodics/totalvoltage.hpp>
 #include <brain/robotstatemachine.hpp>
 #include <periodics/resourcemonitor.hpp>
-#include <periodics/distancesensor.hpp>
+#include <periodics/distancesensorfront.hpp>
+#include <periodics/distancesensorright.hpp>
 #include <brain/globalsv.hpp>
 
 namespace brain
@@ -61,7 +62,8 @@ namespace brain
                 periodics::CTotalVoltage& f_baterry,
                 brain::CRobotStateMachine& f_robotStateMachine,
                 periodics::CResourcemonitor& f_resourceM,
-                periodics::CDistancesensor& f_distanceS
+                periodics::CDistancesensorFront& f_distanceS,
+                periodics::CDistancesensorRight& f_distanceR
                 
             );
             /* Destructor */
@@ -79,7 +81,8 @@ namespace brain
             periodics::CTotalVoltage& m_baterry;
             brain::CRobotStateMachine& m_robotStateMachine;
             periodics::CResourcemonitor& m_resourceM;
-            periodics::CDistancesensor& m_distanceS;
+            periodics::CDistancesensorFront& m_distanceS;
+            periodics::CDistancesensorRight& m_distanceR;
 
     }; // class CKlmanager
 }; // namespace brain

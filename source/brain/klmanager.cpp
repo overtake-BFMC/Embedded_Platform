@@ -46,7 +46,8 @@ namespace brain
         periodics::CTotalVoltage& f_baterry,
         brain::CRobotStateMachine& f_robotStateMachine,
         periodics::CResourcemonitor& f_resourceM,
-        periodics::CDistancesensor& f_distanceS
+        periodics::CDistancesensorFront& f_distanceS,
+        periodics::CDistancesensorRight& f_distanceR
     )
     : m_klvalue(0)
     , m_alerts(f_alerts)
@@ -56,6 +57,7 @@ namespace brain
     , m_robotStateMachine(f_robotStateMachine)
     , m_resourceM(f_resourceM)
     , m_distanceS(f_distanceS)
+    , m_distanceR(f_distanceR)
     {
         /* constructor behaviour */
     }
@@ -89,7 +91,9 @@ namespace brain
                     ThisThread::sleep_for(chrono::milliseconds(50));
                     m_baterry.serialCallbackTOTALVcommand("0", response);
                     ThisThread::sleep_for(chrono::milliseconds(50));
-                    m_distanceS.serialCallbackDISTANCECommand("0", response);
+                    m_distanceS.serialCallbackDISTANCEFRONTCommand("0", response);
+                    ThisThread::sleep_for(chrono::milliseconds(50));
+                    m_distanceR.serialCallbackDISTANCERIGHTCommand("0", response);
                     ThisThread::sleep_for(chrono::milliseconds(50));
                     // m_robotStateMachine.serialCallbackVCDcommand("0;0;2", response);
                     m_robotStateMachine.serialCallbackBRAKEcommand("0", response);
@@ -107,7 +111,8 @@ namespace brain
                     if(!bool_globalsV_instant_isActive) m_instant.serialCallbackINSTANTcommand("1", response);
                     if(!bool_globalsV_battery_isActive) m_baterry.serialCallbackTOTALVcommand("1", response);
                     if(!bool_globalsV_resource_isActive) m_resourceM.serialCallbackRESMONCommand("1", response);
-                    if(!bool_globalsV_distance_isActive) m_distanceS.serialCallbackDISTANCECommand("1", response);
+                    if(!bool_globalsV_distanceFront_isActive) m_distanceS.serialCallbackDISTANCEFRONTCommand("1", response);
+                    if(!bool_globalsV_distanceRight_isActive) m_distanceR.serialCallbackDISTANCERIGHTCommand("1", response);
                     m_alerts.alertsCommand("4", response);
                 }
                 if(l_keyValue == 30 && (uint8_globalsV_value_of_kl != 30)){

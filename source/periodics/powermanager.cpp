@@ -40,7 +40,7 @@
 #define battery_shutdownWarning 7200
 #define maxPercent 100
 #define zeroPercent 0
-#define _22_chars 22
+#define _26_chars 26
 #define _1_char 1
 #define scale_factor 1000
 #define counter_target 250
@@ -80,7 +80,7 @@ namespace periodics
 
     void CPowermanager::_run()
     {
-        char buffer[_22_chars];
+        char buffer[_26_chars];
         uint16_t battery_mAmps_var;
 
         m_totalVoltage.void_TotalSafetyMeasure();

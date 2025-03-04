@@ -1,5 +1,5 @@
-#ifndef DISTANCESENSOR_HPP
-#define DISTANCESENSOR_HPP
+#ifndef DISTANCESENSORFRONT_HPP
+#define DISTANCESENSORFRONT_HPP
 
 // TODO: Add your code here
 
@@ -13,20 +13,21 @@ namespace periodics
     * @brief Class distancesensor
     *
     */
-    class CDistancesensor: public utils::CTask
+    class CDistancesensorFront: public utils::CTask
     {
         public:
             /* Constructor */
-            CDistancesensor(
+            CDistancesensorFront(
                 std::chrono::milliseconds f_period,
                 mbed::DigitalOut f_triggerPin,
                 mbed::DigitalIn f_echoPin,
                 UnbufferedSerial& f_serial
             );
             /* Destructor */
-            ~CDistancesensor();
+            ~CDistancesensorFront();
 
-            void serialCallbackDISTANCECommand(char const * a, char * b);
+            void serialCallbackDISTANCEFRONTCommand(char const * a, char * b);
+            bool isSensorConnected();
             void DistanceMeasure();
         private:
             /* private variables & method member */
