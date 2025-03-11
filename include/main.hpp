@@ -61,6 +61,6 @@
 /* Header file for the task manager library, which  applies periodically the fun function of it's children*/
 #include <utils/task.hpp>
 /* Header file for the Distancesensor functionality */
-#include <periodics/distancesensorfront.hpp>
+//#include <periodics/distancesensorfront.hpp>
 /* Header file for the Distancesensorright functionality */
-#include <periodics/distancesensorright.hpp>
+//#include <periodics/distancesensorright.hpp>

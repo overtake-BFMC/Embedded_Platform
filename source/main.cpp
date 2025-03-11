@@ -64,11 +64,11 @@ brain::CRobotStateMachine g_robotstatemachine(g_baseTick * 50, g_rpi, g_steering
 
 periodics::CResourcemonitor g_resourceMonitor(g_baseTick * 5000, g_rpi);
 
-periodics::CDistancesensorFront g_distanceSensorFront(g_baseTick * 200, D12, D11, g_rpi);
+//periodics::CDistancesensorFront g_distanceSensorFront(g_baseTick * 200, D12, D11, g_rpi);
 
-periodics::CDistancesensorRight g_distanceSensorRight(g_baseTick * 200, D9, D8, g_rpi);
+//periodics::CDistancesensorRight g_distanceSensorRight(g_baseTick * 200, D9, D8, g_rpi);
 
-brain::CKlmanager g_klmanager(g_alerts, g_imu, g_instantconsumption, g_totalvoltage, g_robotstatemachine, g_resourceMonitor, g_distanceSensorFront, g_distanceSensorRight);
+brain::CKlmanager g_klmanager(g_alerts, g_imu, g_instantconsumption, g_totalvoltage, g_robotstatemachine, g_resourceMonitor );//, g_distanceSensorFront, g_distanceSensorRight);
 
 periodics::CPowermanager g_powermanager(g_baseTick * 100, g_klmanager, g_rpi, g_totalvoltage, g_instantconsumption, g_alerts);
 
@@ -90,8 +90,8 @@ drivers::CSerialMonitor::CSerialSubscriberMap g_serialMonitorSubscribers = {
     {"imu",                 mbed::callback(&g_imu,                 &periodics::CImu::serialCallbackIMUcommand)},
     {"kl",                  mbed::callback(&g_klmanager,           &brain::CKlmanager::serialCallbackKLCommand)},
     {"batteryCapacity",     mbed::callback(&g_batteryManager,      &brain::CBatterymanager::serialCallbackBATTERYCommand)},
-    {"distanceSensorFront", mbed::callback(&g_distanceSensorFront, &periodics::CDistancesensorFront::serialCallbackDISTANCEFRONTCommand)},
-    {"distanceSensorRight", mbed::callback(&g_distanceSensorRight, &periodics::CDistancesensorRight::serialCallbackDISTANCERIGHTCommand)},
+   // {"distanceSensorFront", mbed::callback(&g_distanceSensorFront, &periodics::CDistancesensorFront::serialCallbackDISTANCEFRONTCommand)},
+  //  {"distanceSensorRight", mbed::callback(&g_distanceSensorRight, &periodics::CDistancesensorRight::serialCallbackDISTANCERIGHTCommand)},
     {"resourceMonitor",     mbed::callback(&g_resourceMonitor,     &periodics::CResourcemonitor::serialCallbackRESMONCommand),}
 };
 
@@ -110,8 +110,8 @@ utils::CTask* g_taskList[] = {
     &g_resourceMonitor,
     &g_alerts,
     // USER NEW PERIODICS BEGIN -
-    &g_distanceSensorRight,
-    &g_distanceSensorFront,
+  //  &g_distanceSensorRight,
+  //  &g_distanceSensorFront,
     
     // USER NEW PERIODICS END
 }; 

@@ -116,7 +116,7 @@ namespace periodics{
 
         char buffer[_18_chars];
 
-        snprintf(buffer, sizeof(buffer), "@battery:%d;;\r\n", uint16_globalsV_battery_totalVoltage);
+        snprintf(buffer, sizeof(buffer), "@battery:8000;;\r\n" ); // "@battery:%d;;\r\n", uint16_globalsV_battery_totalVoltage);
         m_serial.write(buffer,strlen(buffer));
     }
 

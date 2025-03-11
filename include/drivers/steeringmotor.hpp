@@ -77,7 +77,8 @@ namespace drivers
             /** @brief PWM output pin */
             PwmOut m_pwm_pin;
             /** @brief 0 default */
-            int zero_default = 153441; //0.07672070(7.6% duty cycle) * 20000µs(ms_period) * 100(scale factor)
+            int zero_default = 152441;
+            //int zero_default = 153441; //0.07672070(7.6% duty cycle) * 20000µs(ms_period) * 100(scale factor)
             /** @brief ms_period */
             int8_t ms_period = 20; // 20000µs
             /** @brief step_value */
