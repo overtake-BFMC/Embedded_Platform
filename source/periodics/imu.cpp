@@ -770,7 +770,7 @@ namespace periodics{
         if(comres != BNO055_SUCCESS) return;
 
         struct CAN_Message txMsg;
-        txMsg.id = 0x105;
+        txMsg.id = 0x119;
         txMsg.format = CANStandard;
         txMsg.type = CANData;
         txMsg.len = 8;

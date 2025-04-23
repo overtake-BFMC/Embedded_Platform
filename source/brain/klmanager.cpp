@@ -45,8 +45,9 @@ namespace brain
         //periodics::CInstantConsumption& f_instant,
         //periodics::CTotalVoltage& f_baterry,
         brain::CRobotStateMachine& f_robotStateMachine,
-        periodics::CResourcemonitor& f_resourceM
-       // periodics::CDistancesensorFront& f_distanceS,
+        periodics::CResourcemonitor& f_resourceM,
+        periodics::CDistancesensorFront& f_distanceF,
+        periodics::CIRsensor& f_irSensor
        // periodics::CDistancesensorRight& f_distanceR
     )
     : m_klvalue(0)
@@ -56,7 +57,8 @@ namespace brain
     //, m_baterry(f_baterry)
     , m_robotStateMachine(f_robotStateMachine)
     , m_resourceM(f_resourceM)
-    //, m_distanceS(f_distanceS)
+    , m_distanceF(f_distanceF)
+    , m_irSensor(f_irSensor)
     //, m_distanceR(f_distanceR)
     {
         /* constructor behaviour */
@@ -91,8 +93,10 @@ namespace brain
                     //ThisThread::sleep_for(chrono::milliseconds(50));
                     //m_baterry.serialCallbackTOTALVcommand("0", response);
                     //ThisThread::sleep_for(chrono::milliseconds(50));
-                 //   m_distanceS.serialCallbackDISTANCEFRONTCommand("0", response);
-                   // ThisThread::sleep_for(chrono::milliseconds(50));
+                    m_distanceF.serialCallbackDISTANCEFRONTCommand("0", response);
+                    ThisThread::sleep_for(chrono::milliseconds(50));
+                    m_irSensor.serialCallbackIRSENSORCommand("0", response);
+                    ThisThread::sleep_for(chrono::milliseconds(50));
                    // m_distanceR.serialCallbackDISTANCERIGHTCommand("0", response);
                    // ThisThread::sleep_for(chrono::milliseconds(50));
                     // m_robotStateMachine.serialCallbackVCDcommand("0;0;2", response);
@@ -111,7 +115,8 @@ namespace brain
                     //if(!bool_globalsV_instant_isActive) m_instant.serialCallbackINSTANTcommand("1", response);
                     //if(!bool_globalsV_battery_isActive) m_baterry.serialCallbackTOTALVcommand("1", response);
                     if(!bool_globalsV_resource_isActive) m_resourceM.serialCallbackRESMONCommand("1", response);
-                    //if(!bool_globalsV_distanceFront_isActive) m_distanceS.serialCallbackDISTANCEFRONTCommand("1", response);
+                    if(!bool_globalsV_distanceFront_isActive) m_distanceF.serialCallbackDISTANCEFRONTCommand("1", response);
+                    if(!bool_globalsV_irsensor_isActive) m_irSensor.serialCallbackIRSENSORCommand("1", response);
                     //if(!bool_globalsV_distanceRight_isActive) m_distanceR.serialCallbackDISTANCERIGHTCommand("1", response);
                     m_alerts.alertsCommand("4", response);
                 }

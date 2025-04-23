@@ -23,7 +23,7 @@ rule CUSTOM_COMMAND
 # Rule for re-running cmake.
 
 rule RERUN_CMAKE
-  command = "C:\Program Files\CMake\bin\cmake.exe" --regenerate-during-build -SC:\Users\marko\Documents\prb2\Embedded_Platform\cmake_build\NUCLEO_F401RE\develop\GCC_ARM\_deps\greentea-client-subbuild -BC:\Users\marko\Documents\prb2\Embedded_Platform\cmake_build\NUCLEO_F401RE\develop\GCC_ARM\_deps\greentea-client-subbuild
+  command = "C:\Program Files\CMake\bin\cmake.exe" --regenerate-during-build -SC:\Users\marko\Documents\BoschChall\Embedded_Platform\cmake_build\NUCLEO_F401RE\develop\GCC_ARM\_deps\greentea-client-subbuild -BC:\Users\marko\Documents\BoschChall\Embedded_Platform\cmake_build\NUCLEO_F401RE\develop\GCC_ARM\_deps\greentea-client-subbuild
   description = Re-running CMake...
   generator = 1
 

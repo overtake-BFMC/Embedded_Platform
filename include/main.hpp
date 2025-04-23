@@ -63,9 +63,11 @@
 /* Header file for the task manager library, which  applies periodically the fun function of it's children*/
 #include <utils/task.hpp>
 /* Header file for the Distancesensor functionality */
-//#include <periodics/distancesensorfront.hpp>
+#include <periodics/distancesensorfront.hpp>
 /* Header file for the Distancesensorright functionality */
 //#include <periodics/distancesensorright.hpp>
 #include <drivers/canbusmonitor.hpp>
 /* Header file for the Canmask functionality */
 #include <drivers/canmask.hpp>
+/* Header file for the Irsensor functionality */
+#include <periodics/irsensor.hpp>

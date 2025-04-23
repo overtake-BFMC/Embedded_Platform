@@ -86,7 +86,7 @@ namespace brain{
                 m_speedingControl.setSpeed(-m_speed); // Set the reference speed
 
                 struct CAN_Message txMsg;
-                txMsg.id = 0x107;
+                txMsg.id = 0x123;
                 txMsg.format = CANStandard;
                 txMsg.type = CANData;
                 txMsg.len = 4;
@@ -122,7 +122,7 @@ namespace brain{
                 }
 
                 struct CAN_Message txMsg1;
-                txMsg1.id = 0x108;
+                txMsg1.id = 0x128;
                 txMsg1.format = CANStandard;
                 txMsg.type = CANData;
                 txMsg1.len = 4;
@@ -143,7 +143,7 @@ namespace brain{
                 m_speedingControl.setBrake();
 
                 struct CAN_Message txMsg2;
-                txMsg2.id = 0x113;
+                txMsg2.id = 0x141;
                 txMsg2.format = CANStandard;
                 txMsg.type = CANData;
                 txMsg2.len = 1;
@@ -165,7 +165,7 @@ namespace brain{
                     m_state = 0;
                     
                     struct CAN_Message txMsg3;
-                    txMsg3.id = 0x114;
+                    txMsg3.id = 0x146;
                     txMsg3.format = CANStandard;
                     txMsg.type = CANData;
                     txMsg3.len = 1;

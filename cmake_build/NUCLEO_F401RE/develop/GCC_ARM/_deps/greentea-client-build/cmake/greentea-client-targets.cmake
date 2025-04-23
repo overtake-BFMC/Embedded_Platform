@@ -50,28 +50,28 @@ unset(_cmake_expected_targets)
 add_library(greentea::client STATIC IMPORTED)
 
 set_target_properties(greentea::client PROPERTIES
-  INTERFACE_INCLUDE_DIRECTORIES "C:/Users/marko/Documents/prb2/Embedded_Platform/cmake_build/NUCLEO_F401RE/develop/GCC_ARM/_deps/greentea-client-src/include"
+  INTERFACE_INCLUDE_DIRECTORIES "C:/Users/marko/Documents/BoschChall/Embedded_Platform/cmake_build/NUCLEO_F401RE/develop/GCC_ARM/_deps/greentea-client-src/include"
 )
 
 # Create imported target greentea::client_userio
 add_library(greentea::client_userio STATIC IMPORTED)
 
 set_target_properties(greentea::client_userio PROPERTIES
-  INTERFACE_INCLUDE_DIRECTORIES "C:/Users/marko/Documents/prb2/Embedded_Platform/cmake_build/NUCLEO_F401RE/develop/GCC_ARM/_deps/greentea-client-src/include"
+  INTERFACE_INCLUDE_DIRECTORIES "C:/Users/marko/Documents/BoschChall/Embedded_Platform/cmake_build/NUCLEO_F401RE/develop/GCC_ARM/_deps/greentea-client-src/include"
 )
 
 # Import target "greentea::client" for configuration "develop"
 set_property(TARGET greentea::client APPEND PROPERTY IMPORTED_CONFIGURATIONS DEVELOP)
 set_target_properties(greentea::client PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_DEVELOP "C;CXX"
-  IMPORTED_LOCATION_DEVELOP "C:/Users/marko/Documents/prb2/Embedded_Platform/cmake_build/NUCLEO_F401RE/develop/GCC_ARM/_deps/greentea-client-build/libclient.a"
+  IMPORTED_LOCATION_DEVELOP "C:/Users/marko/Documents/BoschChall/Embedded_Platform/cmake_build/NUCLEO_F401RE/develop/GCC_ARM/_deps/greentea-client-build/libclient.a"
   )
 
 # Import target "greentea::client_userio" for configuration "develop"
 set_property(TARGET greentea::client_userio APPEND PROPERTY IMPORTED_CONFIGURATIONS DEVELOP)
 set_target_properties(greentea::client_userio PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_DEVELOP "CXX"
-  IMPORTED_LOCATION_DEVELOP "C:/Users/marko/Documents/prb2/Embedded_Platform/cmake_build/NUCLEO_F401RE/develop/GCC_ARM/_deps/greentea-client-build/libclient_userio.a"
+  IMPORTED_LOCATION_DEVELOP "C:/Users/marko/Documents/BoschChall/Embedded_Platform/cmake_build/NUCLEO_F401RE/develop/GCC_ARM/_deps/greentea-client-build/libclient_userio.a"
   )
 
 # This file does not depend on other imported targets which have

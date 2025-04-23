@@ -60,7 +60,7 @@ namespace periodics
         uint16_t stack_usage_percentage = (stack_stats.max_size * max_percent_int) / stack_stats.reserved_size;
 
         struct CAN_Message txMsg;
-        txMsg.id = 0x109;
+        txMsg.id = 0x12D;
         txMsg.format = CANStandard;
         txMsg.type = CANData;
         txMsg.len = 4;

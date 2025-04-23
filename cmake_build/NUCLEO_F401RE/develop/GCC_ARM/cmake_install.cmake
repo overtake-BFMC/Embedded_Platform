@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/marko/Documents/prb2/Embedded_Platform
+# Install script for directory: C:/Users/marko/Documents/BoschChall/Embedded_Platform
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -39,13 +39,13 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/marko/Documents/prb2/Embedded_Platform/cmake_build/NUCLEO_F401RE/develop/GCC_ARM/mbed-os/cmake_install.cmake")
+  include("C:/Users/marko/Documents/BoschChall/Embedded_Platform/cmake_build/NUCLEO_F401RE/develop/GCC_ARM/mbed-os/cmake_install.cmake")
 endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
 if(CMAKE_INSTALL_LOCAL_ONLY)
-  file(WRITE "C:/Users/marko/Documents/prb2/Embedded_Platform/cmake_build/NUCLEO_F401RE/develop/GCC_ARM/install_local_manifest.txt"
+  file(WRITE "C:/Users/marko/Documents/BoschChall/Embedded_Platform/cmake_build/NUCLEO_F401RE/develop/GCC_ARM/install_local_manifest.txt"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
 endif()
 if(CMAKE_INSTALL_COMPONENT)
@@ -61,6 +61,6 @@ else()
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
-  file(WRITE "C:/Users/marko/Documents/prb2/Embedded_Platform/cmake_build/NUCLEO_F401RE/develop/GCC_ARM/${CMAKE_INSTALL_MANIFEST}"
+  file(WRITE "C:/Users/marko/Documents/BoschChall/Embedded_Platform/cmake_build/NUCLEO_F401RE/develop/GCC_ARM/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
 endif()

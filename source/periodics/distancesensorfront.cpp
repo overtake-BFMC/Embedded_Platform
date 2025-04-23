@@ -19,7 +19,7 @@ namespace periodics
     , m_triggerPin(f_triggerPin)
     , m_echoPin(f_echoPin)
     , m_canBus(f_canBus)
-    , m_isActive(false)
+    //, m_isActive(false)
 
     //, m_isConnected(true)
     {
@@ -107,7 +107,7 @@ namespace periodics
         DistanceMeasure();
 
         struct CAN_Message txMsg;
-        txMsg.id = 0x106;
+        txMsg.id = 0x11E;
         txMsg.format = CANStandard;
         txMsg.type = CANData;
         txMsg.len = 4;

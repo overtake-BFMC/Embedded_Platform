@@ -55,3 +55,4 @@ bool bool_globalsV_ShuttedDown = false;
 bool bool_globalsV_warningFlag = false;
 bool bool_globalsV_distanceFront_isActive = false;
 bool bool_globalsV_distanceRight_isActive = false;
+bool bool_globalsV_irsensor_isActive = false;

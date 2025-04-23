@@ -34,7 +34,7 @@ include CMakeFiles\rules.ninja
 #############################################
 # Logical path to working directory; prefix for absolute paths.
 
-cmake_ninja_workdir = C$:\Users\marko\Documents\prb2\Embedded_Platform\cmake_build\NUCLEO_F401RE\develop\GCC_ARM\_deps\greentea-client-subbuild\
+cmake_ninja_workdir = C$:\Users\marko\Documents\BoschChall\Embedded_Platform\cmake_build\NUCLEO_F401RE\develop\GCC_ARM\_deps\greentea-client-subbuild\
 
 #############################################
 # Utility command for greentea-client-populate
@@ -46,7 +46,7 @@ build greentea-client-populate: phony CMakeFiles\greentea-client-populate CMakeF
 # Utility command for edit_cache
 
 build CMakeFiles\edit_cache.util: CUSTOM_COMMAND
-  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\marko\Documents\prb2\Embedded_Platform\cmake_build\NUCLEO_F401RE\develop\GCC_ARM\_deps\greentea-client-subbuild && "C:\Program Files\CMake\bin\cmake-gui.exe" -SC:\Users\marko\Documents\prb2\Embedded_Platform\cmake_build\NUCLEO_F401RE\develop\GCC_ARM\_deps\greentea-client-subbuild -BC:\Users\marko\Documents\prb2\Embedded_Platform\cmake_build\NUCLEO_F401RE\develop\GCC_ARM\_deps\greentea-client-subbuild"
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\marko\Documents\BoschChall\Embedded_Platform\cmake_build\NUCLEO_F401RE\develop\GCC_ARM\_deps\greentea-client-subbuild && "C:\Program Files\CMake\bin\cmake-gui.exe" -SC:\Users\marko\Documents\BoschChall\Embedded_Platform\cmake_build\NUCLEO_F401RE\develop\GCC_ARM\_deps\greentea-client-subbuild -BC:\Users\marko\Documents\BoschChall\Embedded_Platform\cmake_build\NUCLEO_F401RE\develop\GCC_ARM\_deps\greentea-client-subbuild"
   DESC = Running CMake cache editor...
   pool = console
   restat = 1
@@ -58,7 +58,7 @@ build edit_cache: phony CMakeFiles\edit_cache.util
 # Utility command for rebuild_cache
 
 build CMakeFiles\rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\marko\Documents\prb2\Embedded_Platform\cmake_build\NUCLEO_F401RE\develop\GCC_ARM\_deps\greentea-client-subbuild && "C:\Program Files\CMake\bin\cmake.exe" --regenerate-during-build -SC:\Users\marko\Documents\prb2\Embedded_Platform\cmake_build\NUCLEO_F401RE\develop\GCC_ARM\_deps\greentea-client-subbuild -BC:\Users\marko\Documents\prb2\Embedded_Platform\cmake_build\NUCLEO_F401RE\develop\GCC_ARM\_deps\greentea-client-subbuild"
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\marko\Documents\BoschChall\Embedded_Platform\cmake_build\NUCLEO_F401RE\develop\GCC_ARM\_deps\greentea-client-subbuild && "C:\Program Files\CMake\bin\cmake.exe" --regenerate-during-build -SC:\Users\marko\Documents\BoschChall\Embedded_Platform\cmake_build\NUCLEO_F401RE\develop\GCC_ARM\_deps\greentea-client-subbuild -BC:\Users\marko\Documents\BoschChall\Embedded_Platform\cmake_build\NUCLEO_F401RE\develop\GCC_ARM\_deps\greentea-client-subbuild"
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
@@ -76,7 +76,7 @@ build CMakeFiles\greentea-client-populate | ${cmake_ninja_workdir}CMakeFiles\gre
 # Custom command for CMakeFiles\greentea-client-populate-complete
 
 build CMakeFiles\greentea-client-populate-complete greentea-client-populate-prefix\src\greentea-client-populate-stamp\greentea-client-populate-done | ${cmake_ninja_workdir}CMakeFiles\greentea-client-populate-complete ${cmake_ninja_workdir}greentea-client-populate-prefix\src\greentea-client-populate-stamp\greentea-client-populate-done: CUSTOM_COMMAND greentea-client-populate-prefix\src\greentea-client-populate-stamp\greentea-client-populate-install greentea-client-populate-prefix\src\greentea-client-populate-stamp\greentea-client-populate-mkdir greentea-client-populate-prefix\src\greentea-client-populate-stamp\greentea-client-populate-download greentea-client-populate-prefix\src\greentea-client-populate-stamp\greentea-client-populate-update greentea-client-populate-prefix\src\greentea-client-populate-stamp\greentea-client-populate-patch greentea-client-populate-prefix\src\greentea-client-populate-stamp\greentea-client-populate-configure greentea-client-populate-prefix\src\greentea-client-populate-stamp\greentea-client-populate-build greentea-client-populate-prefix\src\greentea-client-populate-stamp\greentea-client-populate-install greentea-client-populate-prefix\src\greentea-client-populate-stamp\greentea-client-populate-test
-  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\marko\Documents\prb2\Embedded_Platform\cmake_build\NUCLEO_F401RE\develop\GCC_ARM\_deps\greentea-client-subbuild && "C:\Program Files\CMake\bin\cmake.exe" -E make_directory C:/Users/marko/Documents/prb2/Embedded_Platform/cmake_build/NUCLEO_F401RE/develop/GCC_ARM/_deps/greentea-client-subbuild/CMakeFiles && "C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/marko/Documents/prb2/Embedded_Platform/cmake_build/NUCLEO_F401RE/develop/GCC_ARM/_deps/greentea-client-subbuild/CMakeFiles/greentea-client-populate-complete && "C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/marko/Documents/prb2/Embedded_Platform/cmake_build/NUCLEO_F401RE/develop/GCC_ARM/_deps/greentea-client-subbuild/greentea-client-populate-prefix/src/greentea-client-populate-stamp/greentea-client-populate-done"
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\marko\Documents\BoschChall\Embedded_Platform\cmake_build\NUCLEO_F401RE\develop\GCC_ARM\_deps\greentea-client-subbuild && "C:\Program Files\CMake\bin\cmake.exe" -E make_directory C:/Users/marko/Documents/BoschChall/Embedded_Platform/cmake_build/NUCLEO_F401RE/develop/GCC_ARM/_deps/greentea-client-subbuild/CMakeFiles && "C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/marko/Documents/BoschChall/Embedded_Platform/cmake_build/NUCLEO_F401RE/develop/GCC_ARM/_deps/greentea-client-subbuild/CMakeFiles/greentea-client-populate-complete && "C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/marko/Documents/BoschChall/Embedded_Platform/cmake_build/NUCLEO_F401RE/develop/GCC_ARM/_deps/greentea-client-subbuild/greentea-client-populate-prefix/src/greentea-client-populate-stamp/greentea-client-populate-done"
   DESC = Completed 'greentea-client-populate'
   restat = 1
 
@@ -85,7 +85,7 @@ build CMakeFiles\greentea-client-populate-complete greentea-client-populate-pref
 # Custom command for greentea-client-populate-prefix\src\greentea-client-populate-stamp\greentea-client-populate-build
 
 build greentea-client-populate-prefix\src\greentea-client-populate-stamp\greentea-client-populate-build | ${cmake_ninja_workdir}greentea-client-populate-prefix\src\greentea-client-populate-stamp\greentea-client-populate-build: CUSTOM_COMMAND greentea-client-populate-prefix\src\greentea-client-populate-stamp\greentea-client-populate-configure
-  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\marko\Documents\prb2\Embedded_Platform\cmake_build\NUCLEO_F401RE\develop\GCC_ARM\_deps\greentea-client-build && "C:\Program Files\CMake\bin\cmake.exe" -E echo_append && "C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/marko/Documents/prb2/Embedded_Platform/cmake_build/NUCLEO_F401RE/develop/GCC_ARM/_deps/greentea-client-subbuild/greentea-client-populate-prefix/src/greentea-client-populate-stamp/greentea-client-populate-build"
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\marko\Documents\BoschChall\Embedded_Platform\cmake_build\NUCLEO_F401RE\develop\GCC_ARM\_deps\greentea-client-build && "C:\Program Files\CMake\bin\cmake.exe" -E echo_append && "C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/marko/Documents/BoschChall/Embedded_Platform/cmake_build/NUCLEO_F401RE/develop/GCC_ARM/_deps/greentea-client-subbuild/greentea-client-populate-prefix/src/greentea-client-populate-stamp/greentea-client-populate-build"
   DESC = No build step for 'greentea-client-populate'
   restat = 1
 
@@ -94,7 +94,7 @@ build greentea-client-populate-prefix\src\greentea-client-populate-stamp\greente
 # Custom command for greentea-client-populate-prefix\src\greentea-client-populate-stamp\greentea-client-populate-configure
 
 build greentea-client-populate-prefix\src\greentea-client-populate-stamp\greentea-client-populate-configure | ${cmake_ninja_workdir}greentea-client-populate-prefix\src\greentea-client-populate-stamp\greentea-client-populate-configure: CUSTOM_COMMAND greentea-client-populate-prefix\tmp\greentea-client-populate-cfgcmd.txt greentea-client-populate-prefix\src\greentea-client-populate-stamp\greentea-client-populate-patch
-  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\marko\Documents\prb2\Embedded_Platform\cmake_build\NUCLEO_F401RE\develop\GCC_ARM\_deps\greentea-client-build && "C:\Program Files\CMake\bin\cmake.exe" -E echo_append && "C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/marko/Documents/prb2/Embedded_Platform/cmake_build/NUCLEO_F401RE/develop/GCC_ARM/_deps/greentea-client-subbuild/greentea-client-populate-prefix/src/greentea-client-populate-stamp/greentea-client-populate-configure"
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\marko\Documents\BoschChall\Embedded_Platform\cmake_build\NUCLEO_F401RE\develop\GCC_ARM\_deps\greentea-client-build && "C:\Program Files\CMake\bin\cmake.exe" -E echo_append && "C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/marko/Documents/BoschChall/Embedded_Platform/cmake_build/NUCLEO_F401RE/develop/GCC_ARM/_deps/greentea-client-subbuild/greentea-client-populate-prefix/src/greentea-client-populate-stamp/greentea-client-populate-configure"
   DESC = No configure step for 'greentea-client-populate'
   restat = 1
 
@@ -103,7 +103,7 @@ build greentea-client-populate-prefix\src\greentea-client-populate-stamp\greente
 # Custom command for greentea-client-populate-prefix\src\greentea-client-populate-stamp\greentea-client-populate-download
 
 build greentea-client-populate-prefix\src\greentea-client-populate-stamp\greentea-client-populate-download | ${cmake_ninja_workdir}greentea-client-populate-prefix\src\greentea-client-populate-stamp\greentea-client-populate-download: CUSTOM_COMMAND greentea-client-populate-prefix\src\greentea-client-populate-stamp\greentea-client-populate-gitinfo.txt greentea-client-populate-prefix\src\greentea-client-populate-stamp\greentea-client-populate-mkdir
-  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\marko\Documents\prb2\Embedded_Platform\cmake_build\NUCLEO_F401RE\develop\GCC_ARM\_deps && "C:\Program Files\CMake\bin\cmake.exe" -DCMAKE_MESSAGE_LOG_LEVEL=VERBOSE -P C:/Users/marko/Documents/prb2/Embedded_Platform/cmake_build/NUCLEO_F401RE/develop/GCC_ARM/_deps/greentea-client-subbuild/greentea-client-populate-prefix/tmp/greentea-client-populate-gitclone.cmake && "C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/marko/Documents/prb2/Embedded_Platform/cmake_build/NUCLEO_F401RE/develop/GCC_ARM/_deps/greentea-client-subbuild/greentea-client-populate-prefix/src/greentea-client-populate-stamp/greentea-client-populate-download"
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\marko\Documents\BoschChall\Embedded_Platform\cmake_build\NUCLEO_F401RE\develop\GCC_ARM\_deps && "C:\Program Files\CMake\bin\cmake.exe" -DCMAKE_MESSAGE_LOG_LEVEL=VERBOSE -P C:/Users/marko/Documents/BoschChall/Embedded_Platform/cmake_build/NUCLEO_F401RE/develop/GCC_ARM/_deps/greentea-client-subbuild/greentea-client-populate-prefix/tmp/greentea-client-populate-gitclone.cmake && "C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/marko/Documents/BoschChall/Embedded_Platform/cmake_build/NUCLEO_F401RE/develop/GCC_ARM/_deps/greentea-client-subbuild/greentea-client-populate-prefix/src/greentea-client-populate-stamp/greentea-client-populate-download"
   DESC = Performing download step (git clone) for 'greentea-client-populate'
   pool = console
   restat = 1
@@ -113,7 +113,7 @@ build greentea-client-populate-prefix\src\greentea-client-populate-stamp\greente
 # Custom command for greentea-client-populate-prefix\src\greentea-client-populate-stamp\greentea-client-populate-install
 
 build greentea-client-populate-prefix\src\greentea-client-populate-stamp\greentea-client-populate-install | ${cmake_ninja_workdir}greentea-client-populate-prefix\src\greentea-client-populate-stamp\greentea-client-populate-install: CUSTOM_COMMAND greentea-client-populate-prefix\src\greentea-client-populate-stamp\greentea-client-populate-build
-  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\marko\Documents\prb2\Embedded_Platform\cmake_build\NUCLEO_F401RE\develop\GCC_ARM\_deps\greentea-client-build && "C:\Program Files\CMake\bin\cmake.exe" -E echo_append && "C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/marko/Documents/prb2/Embedded_Platform/cmake_build/NUCLEO_F401RE/develop/GCC_ARM/_deps/greentea-client-subbuild/greentea-client-populate-prefix/src/greentea-client-populate-stamp/greentea-client-populate-install"
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\marko\Documents\BoschChall\Embedded_Platform\cmake_build\NUCLEO_F401RE\develop\GCC_ARM\_deps\greentea-client-build && "C:\Program Files\CMake\bin\cmake.exe" -E echo_append && "C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/marko/Documents/BoschChall/Embedded_Platform/cmake_build/NUCLEO_F401RE/develop/GCC_ARM/_deps/greentea-client-subbuild/greentea-client-populate-prefix/src/greentea-client-populate-stamp/greentea-client-populate-install"
   DESC = No install step for 'greentea-client-populate'
   restat = 1
 
@@ -122,7 +122,7 @@ build greentea-client-populate-prefix\src\greentea-client-populate-stamp\greente
 # Custom command for greentea-client-populate-prefix\src\greentea-client-populate-stamp\greentea-client-populate-mkdir
 
 build greentea-client-populate-prefix\src\greentea-client-populate-stamp\greentea-client-populate-mkdir | ${cmake_ninja_workdir}greentea-client-populate-prefix\src\greentea-client-populate-stamp\greentea-client-populate-mkdir: CUSTOM_COMMAND
-  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\marko\Documents\prb2\Embedded_Platform\cmake_build\NUCLEO_F401RE\develop\GCC_ARM\_deps\greentea-client-subbuild && "C:\Program Files\CMake\bin\cmake.exe" -Dcfgdir= -P C:/Users/marko/Documents/prb2/Embedded_Platform/cmake_build/NUCLEO_F401RE/develop/GCC_ARM/_deps/greentea-client-subbuild/greentea-client-populate-prefix/tmp/greentea-client-populate-mkdirs.cmake && "C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/marko/Documents/prb2/Embedded_Platform/cmake_build/NUCLEO_F401RE/develop/GCC_ARM/_deps/greentea-client-subbuild/greentea-client-populate-prefix/src/greentea-client-populate-stamp/greentea-client-populate-mkdir"
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\marko\Documents\BoschChall\Embedded_Platform\cmake_build\NUCLEO_F401RE\develop\GCC_ARM\_deps\greentea-client-subbuild && "C:\Program Files\CMake\bin\cmake.exe" -Dcfgdir= -P C:/Users/marko/Documents/BoschChall/Embedded_Platform/cmake_build/NUCLEO_F401RE/develop/GCC_ARM/_deps/greentea-client-subbuild/greentea-client-populate-prefix/tmp/greentea-client-populate-mkdirs.cmake && "C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/marko/Documents/BoschChall/Embedded_Platform/cmake_build/NUCLEO_F401RE/develop/GCC_ARM/_deps/greentea-client-subbuild/greentea-client-populate-prefix/src/greentea-client-populate-stamp/greentea-client-populate-mkdir"
   DESC = Creating directories for 'greentea-client-populate'
   restat = 1
 
@@ -131,7 +131,7 @@ build greentea-client-populate-prefix\src\greentea-client-populate-stamp\greente
 # Custom command for greentea-client-populate-prefix\src\greentea-client-populate-stamp\greentea-client-populate-patch
 
 build greentea-client-populate-prefix\src\greentea-client-populate-stamp\greentea-client-populate-patch | ${cmake_ninja_workdir}greentea-client-populate-prefix\src\greentea-client-populate-stamp\greentea-client-populate-patch: CUSTOM_COMMAND greentea-client-populate-prefix\src\greentea-client-populate-stamp\greentea-client-populate-patch-info.txt greentea-client-populate-prefix\src\greentea-client-populate-stamp\greentea-client-populate-update
-  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\marko\Documents\prb2\Embedded_Platform\cmake_build\NUCLEO_F401RE\develop\GCC_ARM\_deps\greentea-client-subbuild && "C:\Program Files\CMake\bin\cmake.exe" -E echo_append && "C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/marko/Documents/prb2/Embedded_Platform/cmake_build/NUCLEO_F401RE/develop/GCC_ARM/_deps/greentea-client-subbuild/greentea-client-populate-prefix/src/greentea-client-populate-stamp/greentea-client-populate-patch"
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\marko\Documents\BoschChall\Embedded_Platform\cmake_build\NUCLEO_F401RE\develop\GCC_ARM\_deps\greentea-client-subbuild && "C:\Program Files\CMake\bin\cmake.exe" -E echo_append && "C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/marko/Documents/BoschChall/Embedded_Platform/cmake_build/NUCLEO_F401RE/develop/GCC_ARM/_deps/greentea-client-subbuild/greentea-client-populate-prefix/src/greentea-client-populate-stamp/greentea-client-populate-patch"
   DESC = No patch step for 'greentea-client-populate'
   pool = console
   restat = 1
@@ -141,7 +141,7 @@ build greentea-client-populate-prefix\src\greentea-client-populate-stamp\greente
 # Custom command for greentea-client-populate-prefix\src\greentea-client-populate-stamp\greentea-client-populate-test
 
 build greentea-client-populate-prefix\src\greentea-client-populate-stamp\greentea-client-populate-test | ${cmake_ninja_workdir}greentea-client-populate-prefix\src\greentea-client-populate-stamp\greentea-client-populate-test: CUSTOM_COMMAND greentea-client-populate-prefix\src\greentea-client-populate-stamp\greentea-client-populate-install
-  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\marko\Documents\prb2\Embedded_Platform\cmake_build\NUCLEO_F401RE\develop\GCC_ARM\_deps\greentea-client-build && "C:\Program Files\CMake\bin\cmake.exe" -E echo_append && "C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/marko/Documents/prb2/Embedded_Platform/cmake_build/NUCLEO_F401RE/develop/GCC_ARM/_deps/greentea-client-subbuild/greentea-client-populate-prefix/src/greentea-client-populate-stamp/greentea-client-populate-test"
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\marko\Documents\BoschChall\Embedded_Platform\cmake_build\NUCLEO_F401RE\develop\GCC_ARM\_deps\greentea-client-build && "C:\Program Files\CMake\bin\cmake.exe" -E echo_append && "C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/marko/Documents/BoschChall/Embedded_Platform/cmake_build/NUCLEO_F401RE/develop/GCC_ARM/_deps/greentea-client-subbuild/greentea-client-populate-prefix/src/greentea-client-populate-stamp/greentea-client-populate-test"
   DESC = No test step for 'greentea-client-populate'
   restat = 1
 
@@ -150,7 +150,7 @@ build greentea-client-populate-prefix\src\greentea-client-populate-stamp\greente
 # Custom command for greentea-client-populate-prefix\src\greentea-client-populate-stamp\greentea-client-populate-update
 
 build greentea-client-populate-prefix\src\greentea-client-populate-stamp\greentea-client-populate-update | ${cmake_ninja_workdir}greentea-client-populate-prefix\src\greentea-client-populate-stamp\greentea-client-populate-update: CUSTOM_COMMAND greentea-client-populate-prefix\tmp\greentea-client-populate-gitupdate.cmake greentea-client-populate-prefix\src\greentea-client-populate-stamp\greentea-client-populate-update-info.txt greentea-client-populate-prefix\src\greentea-client-populate-stamp\greentea-client-populate-download
-  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\marko\Documents\prb2\Embedded_Platform\cmake_build\NUCLEO_F401RE\develop\GCC_ARM\_deps\greentea-client-src && "C:\Program Files\CMake\bin\cmake.exe" -Dcan_fetch=YES -DCMAKE_MESSAGE_LOG_LEVEL=VERBOSE -P C:/Users/marko/Documents/prb2/Embedded_Platform/cmake_build/NUCLEO_F401RE/develop/GCC_ARM/_deps/greentea-client-subbuild/greentea-client-populate-prefix/tmp/greentea-client-populate-gitupdate.cmake"
+  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\marko\Documents\BoschChall\Embedded_Platform\cmake_build\NUCLEO_F401RE\develop\GCC_ARM\_deps\greentea-client-src && "C:\Program Files\CMake\bin\cmake.exe" -Dcan_fetch=YES -DCMAKE_MESSAGE_LOG_LEVEL=VERBOSE -P C:/Users/marko/Documents/BoschChall/Embedded_Platform/cmake_build/NUCLEO_F401RE/develop/GCC_ARM/_deps/greentea-client-subbuild/greentea-client-populate-prefix/tmp/greentea-client-populate-gitupdate.cmake"
   DESC = Performing update step for 'greentea-client-populate'
   pool = console
 
@@ -163,14 +163,14 @@ build greentea-client-populate-prefix\src\greentea-client-populate-stamp\greente
 # =============================================================================
 
 #############################################
-# Folder: C:/Users/marko/Documents/prb2/Embedded_Platform/cmake_build/NUCLEO_F401RE/develop/GCC_ARM/_deps/greentea-client-subbuild
+# Folder: C:/Users/marko/Documents/BoschChall/Embedded_Platform/cmake_build/NUCLEO_F401RE/develop/GCC_ARM/_deps/greentea-client-subbuild
 
 build codegen: phony
 
 # =============================================================================
 
 #############################################
-# Folder: C:/Users/marko/Documents/prb2/Embedded_Platform/cmake_build/NUCLEO_F401RE/develop/GCC_ARM/_deps/greentea-client-subbuild
+# Folder: C:/Users/marko/Documents/BoschChall/Embedded_Platform/cmake_build/NUCLEO_F401RE/develop/GCC_ARM/_deps/greentea-client-subbuild
 
 build all: phony greentea-client-populate
 
