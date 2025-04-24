@@ -43,21 +43,13 @@ drivers::CCanBusMonitor can(mcp);
 /// Base sample time for the task manager. The measurement unit of base sample time is second.
 const std::chrono::milliseconds g_baseTick = std::chrono::milliseconds(1); // microseconds
 
-// Serial interface with the another device(like single board computer). It's an built-in class of mbed based on the UART communication, the inputs have to be transmitter and receiver pins.
-
 // It's a task for blinking periodically the built-in led on the Nucleo board, signaling the code is uploaded on the nucleo.
 periodics::CBlinker g_blinker(g_baseTick * 500, LED1);
 
 periodics::CAlerts g_alerts(g_baseTick * 5000);
 
-// // It's a task for sending periodically the instant current consumption of the battery
-// periodics::CInstantConsumption g_instantconsumption(g_baseTick * 1000, A2, g_rpi);
-
-// // It's a task for sending periodically the battery voltage, so to notice when discharging
-// periodics::CTotalVoltage g_totalvoltage(g_baseTick*3000, A4, g_rpi);
-
 // It's a task for sending periodically the IMU values
-periodics::CImu g_imu(g_baseTick * 150, can, I2C_SDA, I2C_SCL, g_rpi);
+periodics::CImu g_imu(g_baseTick * 150, can, I2C_SDA, I2C_SCL);
 
 // PIN for a motor speed in ms, inferior and superior limit
 drivers::CSpeedingMotor g_speedingDriver(D3, -500, 500); // speed in cm/s
@@ -74,57 +66,21 @@ periodics::CDistancesensorFront g_distanceSensorFront(g_baseTick * 200, D8, D7, 
 
 // periodics::CDistancesensorRight g_distanceSensorRight(g_baseTick * 200, D, D, g_rpi);
 
-periodics::CIRsensor g_irsensor(g_baseTick * 50, PA_10, can, g_rpi);
+periodics::CIRsensor g_irsensor(g_baseTick * 50, PA_10, can);
 
-brain::CKlmanager g_klmanager(g_alerts, g_imu, g_robotstatemachine, g_resourceMonitor, g_distanceSensorFront, g_irsensor); //, g_distanceSensorFront, g_distanceSensorRight);
-
-// periodics::CPowermanager g_powermanager(g_baseTick * 100, g_klmanager, g_rpi, g_totalvoltage, g_instantconsumption, g_alerts);
-
-// brain::CBatterymanager g_batteryManager(dummy_value);
-
-/* USER NEW COMPONENT BEGIN */
-
-
-/* USER NEW COMPONENT END */
-
-// Map for redirecting messages with the key and the callback functions. If the message key equals to one of the enumerated keys, than it will be applied the paired callback function.
-
-drivers::CSerialMonitor::CSerialSubscriberMap g_serialMonitorSubscribers = {
-    {"speed", mbed::callback(&g_robotstatemachine, &brain::CRobotStateMachine::serialCallbackSPEEDcommand)},
-    {"steer", mbed::callback(&g_robotstatemachine, &brain::CRobotStateMachine::serialCallbackSTEERcommand)},
-    {"brake", mbed::callback(&g_robotstatemachine, &brain::CRobotStateMachine::serialCallbackBRAKEcommand)},
-    {"vcd", mbed::callback(&g_robotstatemachine, &brain::CRobotStateMachine::serialCallbackVCDcommand)},
-    //{"battery",             mbed::callback(&g_totalvoltage,        &periodics::CTotalVoltage::serialCallbackTOTALVcommand)},
-    //{"instant",             mbed::callback(&g_instantconsumption,  &periodics::CInstantConsumption::serialCallbackINSTANTcommand)},
-    {"imu", mbed::callback(&g_imu, &periodics::CImu::serialCallbackIMUcommand)},
-    {"kl", mbed::callback(&g_klmanager, &brain::CKlmanager::serialCallbackKLCommand)},
-    //{"batteryCapacity",     mbed::callback(&g_batteryManager,      &brain::CBatterymanager::serialCallbackBATTERYCommand)},
-    //{"distanceSensorFront", mbed::callback(&g_distanceSensorFront, &periodics::CDistancesensorFront::serialCallbackDISTANCEFRONTCommand)},
-    //{"distanceSensorRight", mbed::callback(&g_distanceSensorRight, &periodics::CDistancesensorRight::serialCallbackDISTANCERIGHTCommand)},
-    {
-        "resourceMonitor",
-        mbed::callback(&g_resourceMonitor, &periodics::CResourcemonitor::serialCallbackRESMONCommand),
-    }};
-
-// Create the serial monitor object, which decodes, redirects the messages and transmits the responses.
-
-drivers::CSerialMonitor g_serialMonitor(g_rpi, g_serialMonitorSubscribers);
+brain::CKlmanager g_klmanager(g_alerts, g_imu, g_robotstatemachine, g_resourceMonitor, g_distanceSensorFront, g_irsensor);
 
 drivers::CCanMask::canSubscriberMap g_canMonitorSubscribers = {
     {0x10A, mbed::callback(&g_robotstatemachine, &brain::CRobotStateMachine::serialCallbackSPEEDcommand)},
     {0x10F, mbed::callback(&g_robotstatemachine, &brain::CRobotStateMachine::serialCallbackSTEERcommand)},
     {0x105, mbed::callback(&g_robotstatemachine, &brain::CRobotStateMachine::serialCallbackBRAKEcommand)},
     {0x114, mbed::callback(&g_robotstatemachine, &brain::CRobotStateMachine::serialCallbackVCDcommand)},
-    //{"battery",             mbed::callback(&g_totalvoltage,        &periodics::CTotalVoltage::serialCallbackTOTALVcommand)},
-    //{"instant",             mbed::callback(&g_instantconsumption,  &periodics::CInstantConsumption::serialCallbackINSTANTcommand)},
     {0x137, mbed::callback(&g_imu, &periodics::CImu::serialCallbackIMUcommand)},
     {0x100, mbed::callback(&g_klmanager, &brain::CKlmanager::serialCallbackKLCommand)},
-    //{"batteryCapacity",     mbed::callback(&g_batteryManager,      &brain::CBatterymanager::serialCallbackBATTERYCommand)},
     {0x13C, mbed::callback(&g_distanceSensorFront, &periodics::CDistancesensorFront::serialCallbackDISTANCEFRONTCommand)},
     {0x13E, mbed::callback(&g_irsensor, &periodics::CIRsensor::serialCallbackIRSENSORCommand)},
     //  {"distanceSensorRight", mbed::callback(&g_distanceSensorRight, &periodics::CDistancesensorRight::serialCallbackDISTANCERIGHTCommand)},
-    {0x132, mbed::callback(&g_resourceMonitor, &periodics::CResourcemonitor::serialCallbackRESMONCommand)}
-};
+    {0x132, mbed::callback(&g_resourceMonitor, &periodics::CResourcemonitor::serialCallbackRESMONCommand)}};
 
 drivers::CCanMask g_canMon(can, g_canMonitorSubscribers, PC_0);
 
@@ -132,17 +88,12 @@ drivers::CCanMask g_canMon(can, g_canMonitorSubscribers, PC_0);
 utils::CTask *g_taskList[] = {
 
     &g_blinker,
-    //&g_instantconsumption,
-    //  &g_totalvoltage,
     &g_imu,
     &g_robotstatemachine,
-    &g_serialMonitor,
-    //&g_powermanager,
     &g_resourceMonitor,
     &g_alerts,
     &g_canMon,
 
-    // USER NEW PERIODICS BEGIN -
     &g_irsensor,
     //  &g_distanceSensorRight,
     &g_distanceSensorFront
@@ -167,13 +118,13 @@ uint8_t setup()
     //     /* parity */ SerialBase::None,
     //     /* stop bit */ 1
     // );
-    g_rpi.write("\r\n\r\n", 4);
-    g_rpi.write("#################\r\n", 19);
-    g_rpi.write("#               #\r\n", 19);
-    g_rpi.write("#   I'm alive   #\r\n", 19);
-    g_rpi.write("#               #\r\n", 19);
-    g_rpi.write("#################\r\n", 19);
-    g_rpi.write("\r\n", 2);
+    printf("\r\n\r\n");
+    printf("#################\r\n");
+    printf("#               #\r\n");
+    printf("#   I'm alive   #\r\n");
+    printf("#               #\r\n");
+    printf("#################\r\n");
+    printf("\r\n");
 
     return 0;
 }

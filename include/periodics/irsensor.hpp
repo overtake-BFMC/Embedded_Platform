@@ -22,8 +22,7 @@ namespace periodics
             CIRsensor(
                 std::chrono::milliseconds f_period,
                 mbed::DigitalIn f_pin,
-                drivers::CCanBusMonitor& f_canBus,
-                UnbufferedSerial& f_serial
+                drivers::CCanBusMonitor& f_canBus
             );
             /* Destructor */
             ~CIRsensor();
@@ -34,7 +33,6 @@ namespace periodics
             drivers::CCanBusMonitor& m_canBus;
             mbed::DigitalIn m_pin;
             uint8_t m_value;
-            UnbufferedSerial& m_serial;
 
             /* Run method */
             virtual void        _run();

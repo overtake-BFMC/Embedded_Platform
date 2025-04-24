@@ -1,3 +1,4 @@
 .mbedbuild
 mbed-os/
+cmake_build/
 .vscode

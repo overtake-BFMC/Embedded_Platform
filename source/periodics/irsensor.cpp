@@ -10,13 +10,11 @@ namespace periodics
     CIRsensor::CIRsensor(
         std::chrono::milliseconds f_period,
         mbed::DigitalIn f_pin,
-        drivers::CCanBusMonitor& f_canBus,
-        UnbufferedSerial& f_serial
+        drivers::CCanBusMonitor& f_canBus
     )
     : utils::CTask(f_period)
     , m_pin(f_pin)
     , m_canBus(f_canBus)
-    , m_serial(f_serial)
     {
     }
 
@@ -49,7 +47,6 @@ namespace periodics
     /* Run method */
     void CIRsensor::_run()
     {
-        char buffer[10];
         /* Run method behaviour */
         if(!m_isActive) return;
 
@@ -64,8 +61,7 @@ namespace periodics
 
         m_canBus.write(&txMsg);
 
-        snprintf( buffer, sizeof(buffer), "\nIR %d\n", m_value);
-        m_serial.write(buffer,strlen(buffer));
+        printf( "IR %d\n\r", m_value);
     }
 
 }; // namespace periodics

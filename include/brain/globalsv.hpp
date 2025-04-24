@@ -36,33 +36,13 @@
 #include <algorithm>
 #include <cstdint>
 
-// TODO: Add your code here
-
-extern uint32_t uint32_globalsV_consumption_Total_mAmpsH;
-extern uint32_t uint32_globalsV_numberOfMiliseconds_Total;
-extern uint32_t uint32_globalsV_instant_mAmpsH;
-extern uint32_t uint32_globalsV_range_left_shutdown;
-extern uint32_t currentEMA;
-
-extern uint16_t uint16_globalsV_battery_totalVoltage;
-extern uint16_t int_globalsV_instantConsumption_Avg_Total_mAmpsH;
-extern uint16_t uint16_globalsV_battery_mAmps_user;
-extern uint16_t readings[11]; 
-
 extern uint8_t uint8_globalsV_value_of_kl;
 
-extern uint8_t alpha_scaled;
-extern uint8_t windowSize; 
-extern uint8_t indexul; 
-
 extern bool bool_globalsV_imu_isActive;
-extern bool bool_globalsV_instant_isActive;
 extern bool bool_globalsV_distanceFront_isActive;
 extern bool bool_globalsV_irsensor_isActive;
 extern bool bool_globalsV_distanceRight_isActive;
-extern bool bool_globalsV_battery_isActive;
 extern bool bool_globalsV_resource_isActive;
 extern bool bool_globalsV_ShuttedDown;
-extern bool bool_globalsV_warningFlag;
 
 #endif // GLOBALSV_HPP

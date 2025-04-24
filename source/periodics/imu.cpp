@@ -32,7 +32,6 @@
 #include <periodics/imu.hpp>
 #include "imu.hpp"
 
-#define _100_chars                      100
 #define BNO055_EULER_DIV_DEG_int        16
 #define BNO055_LINEAR_ACCEL_DIV_MSQ_int 100
 #define precision_scaling_factor        1000
@@ -56,12 +55,10 @@ namespace periodics{
             std::chrono::milliseconds    f_period, 
             drivers::CCanBusMonitor& f_canBus,
             PinName SDA,
-            PinName SCL,
-            UnbufferedSerial& f_serialPort )
+            PinName SCL)
         : utils::CTask(f_period)
         , m_isActive(false)
         , m_canBus(f_canBus)
-        , m_serial(f_serialPort)
         , m_velocityX(0)
         , m_velocityY(0)
         , m_velocityZ(0)
@@ -702,7 +699,6 @@ namespace periodics{
     {
         if(!m_isActive) return;
         
-        char buffer[_100_chars];
         s8 comres = BNO055_SUCCESS;
 
         s16 s16_euler_h_raw = BNO055_INIT_VALUE;
@@ -787,15 +783,13 @@ namespace periodics{
 
         m_canBus.write(&txMsg);
 
-        snprintf(buffer, sizeof(buffer), "@imu:%d.%03d;%d.%03d;%d.%03d;%d.%03d;%d.%03d;%d.%03d;;\r\n",
+        printf("@imu:%d.%03d;%d.%03d;%d.%03d;%d.%03d;%d.%03d;%d.%03d;;\r\n",
             s16_euler_r_deg/1000, abs(s16_euler_r_deg%1000),
             s16_euler_p_deg/1000, abs(s16_euler_p_deg%1000),
             s16_euler_h_deg/1000, abs(s16_euler_h_deg%1000),
             m_velocityX/1000, abs(m_velocityX%1000),
             m_velocityY/1000, abs(m_velocityY%1000),
-            m_velocityZ/1000, abs(m_velocityZ%1000));
-        m_serial.write(buffer,strlen(buffer));
-        
+            m_velocityZ/1000, abs(m_velocityZ%1000));        
     }
 
 }; // namespace periodics

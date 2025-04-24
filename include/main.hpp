@@ -40,20 +40,12 @@
 #include <periodics/blinker.hpp>
 /* Header file for the IMU functionality */
 #include <periodics/imu.hpp>
-/* Header file for the instant consumption measurement functionality */
-#include <periodics/instantconsumption.hpp>
-/* Header file for the total voltage measurement functionality */
-#include <periodics/totalvoltage.hpp>
 /* Header file for the klmanager functionality */
 #include <brain/klmanager.hpp>
 /* Header file for the resourceMonitor functionality */
 #include <periodics/resourcemonitor.hpp>
-/* Header file for the powermanager functionality */
-#include <periodics/powermanager.hpp>
 /* Header file for global variables */
 #include <brain/globalsv.hpp>
-/* Header file for the battery manager functionality */
-#include <brain/batterymanager.hpp>
 /* Header file for the serial communication functionality */
 #include <drivers/serialmonitor.hpp>
 /* Header file for the robot state machine, which deals with the cars movement (steering and speed) */

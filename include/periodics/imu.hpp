@@ -59,8 +59,7 @@ namespace periodics
                 std::chrono::milliseconds    f_period, 
                 drivers::CCanBusMonitor& f_canBus,
                 PinName SDA,
-                PinName SCL,
-                UnbufferedSerial& f_serialPort
+                PinName SCL
             );
             /* Destructor */
             ~CImu();
@@ -102,7 +101,6 @@ namespace periodics
 
             /* @brief Serial communication obj.  */
             drivers::CCanBusMonitor& m_canBus;
-            UnbufferedSerial& m_serial;
 
             s32 m_velocityX;
             s32 m_velocityY;

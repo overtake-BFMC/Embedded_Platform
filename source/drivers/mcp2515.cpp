@@ -451,8 +451,8 @@
      }
      */
      // and clear, deactivate the two receive buffers.
-     // setRegister(MCP_RXB0CTRL, 0);
-     //setRegister(MCP_RXB1CTRL, 0);
+    setRegister(MCP_RXB0CTRL, 0);
+    setRegister(MCP_RXB1CTRL, 0);
  }
  
  uint8_t mcp2515::init(  int canSpeed) {
