@@ -113,7 +113,7 @@ namespace brain
                 if(l_keyValue == 30 && (uint8_globalsV_value_of_kl != 30)){
                     sprintf(b,"%d",l_keyValue);
                     uint8_globalsV_value_of_kl = 30;
-                    m_robotStateMachine.serialCallbackVCDcommand("0;0;2", response);
+                    //m_robotStateMachine.serialCallbackVCDcommand("0;0;2", response);
                     m_alerts.alertsCommand("2", response);
                 }
             }

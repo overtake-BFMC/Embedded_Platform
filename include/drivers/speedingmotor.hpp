@@ -34,6 +34,13 @@
 
 /* The mbed library */
 #include <mbed.h>
+#include <map>
+
+struct SpeedPwmPair 
+{
+    int returnSpeed;
+    int pwm;    // in microseconds
+};
 
 namespace drivers
 {
@@ -44,9 +51,12 @@ namespace drivers
     class ISpeedingCommand
     {
         public:
-            virtual void setSpeed(int f_speed) = 0 ;
-            virtual bool inRange(int f_speed) = 0 ;
+            virtual int setSpeed(int) = 0 ;
+            virtual bool inRange(int) = 0 ;
             virtual void setBrake() = 0 ;
+            virtual void maxThrottle() = 0;
+            virtual void minThrottle() = 0;
+            virtual void configureThrottle(uint16_t) = 0;
     };
 
     /**  
@@ -67,59 +77,68 @@ namespace drivers
             /* Destructor */
             ~CSpeedingMotor();
             /* Set speed */
-            void setSpeed(int f_speed); 
+            int setSpeed(int); 
             /* Check speed is in range */
-            bool inRange(int f_speed);
+            bool inRange(int);
             /* Set brake */
             void setBrake(); 
+
+            void maxThrottle();
+            void minThrottle();
+            void configureThrottle(uint16_t);
 
         private:
             /** @brief PWM output pin */
             PwmOut m_pwm_pin;
             /** @brief 0 default */
-            uint16_t zero_default = 1491; //0.074568(7.4% duty cycle) * 20000µs(ms_period)
+            uint16_t zero_default = 1500; // 1491; //0.074568(7.4% duty cycle) * 20000µs(ms_period)
             /** @brief 0 default */
             uint8_t ms_period = 20; // 20000µs
             /** @brief step_value */
-            int16_t step_value = 102;  // 0.00051 * 20000µs(ms_period) * 10(scale factor)
+            //int16_t step_value = 102;  // 0.00051 * 20000µs(ms_period) * 10(scale factor)
             /** @brief Inferior limit */
             const int m_inf_limit;
             /** @brief Superior limit */
             const int m_sup_limit;
 
-            /* interpolate the step value based on the speed value */
-            int16_t interpolate(int speed, const int speedValuesP[], const int speedValuesN[], const int stepValues[], int size);
+            //real max throttle 500
+            //real min throttle 2500
 
-            // Scaled predefined values for speeding reference and interpolation
-            
-            const int speedValuesP[25] = {
-                 40, 50, 60, 70, 80, 90, 100, 110, 120, 130,
-                140, 150, 160, 170, 180, 190, 200, 210, 220, 260,
-                300, 350, 400, 450, 500
+            uint16_t max_throttle = 1660;
+            uint16_t min_throttle = 1330;
+
+            const SpeedPwmPair forwardTable[10] = 
+            {
+                { 48, 1405 },// { 70, 73, 1398}, { 90, 93, 1394}, { 95, 96, 1393},
+                { 101, 1392},//{ 140, 143, 1383}, 
+                { 153, 1382},// { 190, 191, 1375}, { 195, 196, 1374},
+                { 201, 1373},
+                { 248, 1366},// { 255, 255, 1365}, { 280, 281, 1361},
+                { 302, 1358},// { 340, 344, 1352},
+                { 355, 1351},// { 390, 396, 1345},
+                { 406, 1344},
+                { 450, 1339},// { 485, 488, 1335},{ 490, 492, 1334},
+                { 498, 1333}// { 515, 516, 1332}, { 520, 522, 1332}
             };
 
-            const int speedValuesN[25] = {
-                 -40, -50, -60, -70, -80, -90, -100, -110, -120, -130,
-                -140, -150, -160, -170, -180, -190, -200, -210, -220, -260,
-                -300, -350, -400, -450, -500
+            // Reverse table
+            const SpeedPwmPair reverseTable[10] = 
+            {
+                //{  45, 46, 1550}, {  48, 1551}, {  49, 1552},{  49, 1560}, 
+                { 50, 1570},//{  60, 65, 1580}, { 95, 98, 1589}, 
+                { 101, 1590}, 
+                { 147, 1598}, //{ 155, 155, 1601},
+                { 199, 1608}, //{ 210, 208, 1610}, { 240, 239, 1616}, { 245, 1617}, 
+                { 251, 1616},// { 340, 345, 1624}, 
+                { 299, 1623}, //{ 355, 354, 1632}, { 380, 380, 1636}, 
+                { 352, 1630},//{ 440, 442, 1644}, 
+                { 400, 1637}, 
+                { 448, 1643},
+                { 500, 1649}//{ 535, 538, 1655}, { 585, 586, 1659}
             };
 
-            // StepValues have a scale factor applied (*10)
-            const int stepValues[25] = {
-                215, 175, 150, 127, 120, 105, 100, 93, 80, 76,
-                72, 70, 68, 67, 63, 60, 59, 57, 55, 43,//42
-                43, 35, 34, 33, 32
-            };
-            /*
-            const int speedValuesNew [10] = {
-                5, 10, 15, 20, 25, 30, 35, 40, 45, 50
-            };
-            
-            const int stepValuesNew[10] = {
-                125, 102, 110, 92, 73, 71, 60, 58, 51, 46 
-            };
-            */ 
-            int conversion(int f_speed); //angle to duty cycle
+            int interpolatePwm(int, const SpeedPwmPair*, int);
+            int pwmFromSpeed(int);
     }; // class CSpeedingMotor
 }; // namespace drivers
 

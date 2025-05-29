@@ -32,7 +32,7 @@ namespace drivers
 
         if (this->m_can.read(&rxMsg) == CAN_OK)
         {
-            printf("primio id %d\n\r;", rxMsg.id);
+            //printf("primio id %d\n\r;", rxMsg.id);
 
             if (rxMsg.id == 0x98)
             {
@@ -46,7 +46,7 @@ namespace drivers
                 if (rxMsg.len == 1)
                 {
                     uint8_t val = rxMsg.data[0];
-                    printf("val %d;\n", val);
+                    printf("id %d val %d;\n", rxMsg.id, val);
 
                     auto it = m_canSubscriberMap.find(rxMsg.id);
                     sprintf(msgValue, "%d", val);

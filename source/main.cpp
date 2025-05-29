@@ -72,6 +72,9 @@ brain::CKlmanager g_klmanager(g_alerts, g_imu, g_robotstatemachine, g_resourceMo
 
 drivers::CCanMask::canSubscriberMap g_canMonitorSubscribers = {
     {0x10A, mbed::callback(&g_robotstatemachine, &brain::CRobotStateMachine::serialCallbackSPEEDcommand)},
+    {0x90, mbed::callback(&g_robotstatemachine, &brain::CRobotStateMachine::serialCallbackMAXTHROTTLEcommand)},
+    {0x92, mbed::callback(&g_robotstatemachine, &brain::CRobotStateMachine::serialCallbackMINTHROTTLEcommand)},
+    {0x91, mbed::callback(&g_robotstatemachine, &brain::CRobotStateMachine::serialCallbackCONFTHROTTLEcommand)},
     {0x10F, mbed::callback(&g_robotstatemachine, &brain::CRobotStateMachine::serialCallbackSTEERcommand)},
     {0x105, mbed::callback(&g_robotstatemachine, &brain::CRobotStateMachine::serialCallbackBRAKEcommand)},
     {0x114, mbed::callback(&g_robotstatemachine, &brain::CRobotStateMachine::serialCallbackVCDcommand)},

@@ -76,6 +76,10 @@ namespace brain
         /* Serial callback method for vcd */
         void serialCallbackVCDcommand(char const *a, char *response);
 
+        void serialCallbackMAXTHROTTLEcommand(char const *a, char *b);
+        void serialCallbackMINTHROTTLEcommand(char const *a, char *b);
+        void serialCallbackCONFTHROTTLEcommand(char const *a, char *b);
+
     private:
         /* Contains the state machine, which control the lower level drivers (motor and steering) based the current state. */
         virtual void _run();
@@ -86,7 +90,7 @@ namespace brain
         /* Steering wheel control interface */
         drivers::ISpeedingCommand &m_speedingControl;
         /* State machine state */
-        uint8_t m_state;
+        //uint8_t m_state;
 
         uint16_t m_ticksRun;
 
@@ -96,8 +100,20 @@ namespace brain
 
         int m_speed;
         int m_steering;
+
+        int m_pwmConfigure;
+
         bool steerSignP;
         bool steerSignN;
+
+        bool m_speedActivate;
+        bool m_steerActivate;
+        bool m_brakeActivate;
+        bool m_vcdActivate;
+        bool m_maxThrottleActivate;
+        bool m_minThrottleActivate;
+        bool m_configureThrottleActivate;
+
 
     }; // class CRobotStateMachine
 }; // namespace brain

@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2019, Bosch Engineering Center Cluj and BFMC organizers
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
 
@@ -28,195 +28,288 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
 */
 
-
 #include <brain/robotstatemachine.hpp>
 
 #define scale_ds_to_ms 100
 
-namespace brain{
+namespace brain
+{
 
     /**
      * @brief CRobotStateMachine Class constructor
-     * 
+     *
      * @param f_period              period for controller execution in seconds
      * @param f_serialPort          reference to serial communication object
      * @param f_steeringControl     reference to steering motor control interface
      * @param f_speedingControl     reference to brushless motor control interface
      */
     CRobotStateMachine::CRobotStateMachine(
-            std::chrono::milliseconds                      f_period,
-            drivers::CCanBusMonitor&             f_canBus,
-            drivers::ISteeringCommand&    f_steeringControl,
-            drivers::ISpeedingCommand&    f_speedingControl
-        ) 
-        : utils::CTask(f_period)
-        , m_canBus(f_canBus)
-        , m_steeringControl(f_steeringControl)
-        , m_speedingControl(f_speedingControl)
-        , m_state(0)
-        , m_ticksRun(0)
-        , m_targetTime(0)
-        , m_period((uint16_t)(f_period.count()))
-        , m_speed(0)
-        , m_steering(0)
-        , steerSignP(false)
-        , steerSignN(false)
+        std::chrono::milliseconds f_period,
+        drivers::CCanBusMonitor &f_canBus,
+        drivers::ISteeringCommand &f_steeringControl,
+        drivers::ISpeedingCommand &f_speedingControl)
+        : utils::CTask(f_period), m_canBus(f_canBus), m_steeringControl(f_steeringControl), m_speedingControl(f_speedingControl), m_ticksRun(0), m_targetTime(0), m_period((uint16_t)(f_period.count())), m_speed(0), m_steering(0), steerSignP(false), steerSignN(false)
+        ,m_speedActivate(false), m_steerActivate(false), m_brakeActivate(false), m_vcdActivate(false), m_maxThrottleActivate(false), m_minThrottleActivate(false), m_configureThrottleActivate(false)
     {
     }
 
     /** @brief  CRobotStateMachine class destructor
      */
-    CRobotStateMachine::~CRobotStateMachine()
-    {
+    CRobotStateMachine::~CRobotStateMachine() {
     };
 
     /** \brief  _Run method contains the main application logic, where it controls the lower lever drivers (dc motor and steering) based the given command and state.
-     * It has three main states: 
+     * It has three main states:
      *  - 1 - move state -> control the motor rotation speed by giving a speed reference, which is then converted to PWM
      *  - 2 - steering state -> trigger the steering of the motor
-     *  - 3 - Brake state -> make the motor enter into a brake state. 
-     *  - 4 - State responsible for configuring the vehicle's speed and steering over a specified duration.         
+     *  - 3 - Brake state -> make the motor enter into a brake state.
+     *  - 4 - State responsible for configuring the vehicle's speed and steering over a specified duration.
      */
     void CRobotStateMachine::_run()
-    {   
-        switch(m_state)
+    {
+        if(m_configureThrottleActivate)
         {
-            // speed state - control the dc motor rotation speed and the steering angle. 
-            case 1:
-                m_speedingControl.setSpeed(-m_speed); // Set the reference speed
+            m_speedingControl.configureThrottle(m_pwmConfigure);
 
-                struct CAN_Message txMsg;
-                txMsg.id = 0x123;
-                txMsg.format = CANStandard;
-                txMsg.type = CANData;
-                txMsg.len = 4;
+            struct CAN_Message txMsg;
+            txMsg.id = 0x95;
+            txMsg.format = CANStandard;
+            txMsg.type = CANData;
+            txMsg.len = 4;
 
-                txMsg.data[0] = m_speed & 0xFF;
-                txMsg.data[1] = (m_speed >> 8) & 0xFF;
-                txMsg.data[2] = (m_speed >> 16) & 0xFF;
-                txMsg.data[3] = (m_speed >> 24) & 0xFF;
+            txMsg.data[0] = m_pwmConfigure & 0xFF;
+            txMsg.data[1] = (m_pwmConfigure >> 8) & 0xFF;
+            txMsg.data[2] = (m_pwmConfigure >> 16) & 0xFF;
+            txMsg.data[3] = (m_pwmConfigure >> 24) & 0xFF;
 
-                m_canBus.write(&txMsg);
+            m_canBus.write(&txMsg);
 
-                m_state = 0;
-                break;
 
-            // Steering state
-            case 2:
-                m_steeringControl.setAngle(m_steering); // control the steering angle
-                
-                if( m_steering > 0 )
-                    steerSignP = true;
-                if( m_steering < 0 )
-                    steerSignN = true;
+            m_configureThrottleActivate = false;
+        }
+        
+        if(m_maxThrottleActivate)
+        {
+            m_speedingControl.maxThrottle();
+            m_maxThrottleActivate = false;
+        }
 
-                if( m_steering == 0 && steerSignN )
-                {
-                    steerSignN = false;
-                    m_steeringControl.setAngle(30);
-                }
-                if( m_steering == 0 && steerSignP )
-                {
-                    steerSignP = false;
-                    m_steeringControl.setAngle(-50);
-                }
+        if(m_minThrottleActivate)
+        {
+            m_speedingControl.minThrottle();
+            m_minThrottleActivate = false;
+        }
 
-                struct CAN_Message txMsg1;
-                txMsg1.id = 0x128;
-                txMsg1.format = CANStandard;
-                txMsg.type = CANData;
-                txMsg1.len = 4;
+        // speed state - control the dc motor rotation speed and the steering angle.
+        if (m_speedActivate)
+        {
+            int returnSpeed = m_speedingControl.setSpeed(m_speed); // Set the reference speed
 
-                txMsg1.data[0] = m_steering & 0xFF;
-                txMsg1.data[1] = (m_steering >> 8) & 0xFF;
-                txMsg1.data[2] = (m_steering >> 16) & 0xFF;
-                txMsg1.data[3] = (m_steering >> 24) & 0xFF;
-                
-                m_canBus.write(&txMsg1);
+            struct CAN_Message txMsg;
+            txMsg.id = 0x123;
+            txMsg.format = CANStandard;
+            txMsg.type = CANData;
+            txMsg.len = 4;
 
-                m_state = 0;
-                break;
+            txMsg.data[0] = returnSpeed & 0xFF;
+            txMsg.data[1] = (returnSpeed >> 8) & 0xFF;
+            txMsg.data[2] = (returnSpeed >> 16) & 0xFF;
+            txMsg.data[3] = (returnSpeed >> 24) & 0xFF;
 
-            // Brake state
-            case 3:
-                m_steeringControl.setAngle(m_steering); // control the steering angle 
-                m_speedingControl.setBrake();
+            m_canBus.write(&txMsg);
 
-                struct CAN_Message txMsg2;
-                txMsg2.id = 0x141;
-                txMsg2.format = CANStandard;
-                txMsg.type = CANData;
-                txMsg2.len = 1;
+            m_speedActivate = false;
+        }
 
-                txMsg2.data[0] = 1;  //brake:1
+        // Steering state
+        if (m_steerActivate)
+        {
+            m_steeringControl.setAngle(m_steering); // control the steering angle
 
-                m_canBus.write(&txMsg2);
+            if (m_steering > 0)
+                steerSignP = true;
+            if (m_steering < 0)
+                steerSignN = true;
 
-                m_state = 0;
-                break;
+            if (m_steering == 0 && steerSignN)
+            {
+                steerSignN = false;
+                m_steeringControl.setAngle(30);
+            }
+            if (m_steering == 0 && steerSignP)
+            {
+                steerSignP = false;
+                m_steeringControl.setAngle(-50);
+            }
 
-            // State responsible for configuring the vehicle's speed and steering over a specified duration.
-            case 4:
-                // If the accumulated ticks exceed the target time, stop the movement and deactivate the task.
-                if(m_ticksRun >= m_targetTime+m_period)
-                {
-                    m_speedingControl.setSpeed(0);
-                    m_steeringControl.setAngle(0);
-                    m_state = 0;
-                    
-                    struct CAN_Message txMsg3;
-                    txMsg3.id = 0x146;
-                    txMsg3.format = CANStandard;
-                    txMsg.type = CANData;
-                    txMsg3.len = 1;
+            struct CAN_Message txMsg1;
+            txMsg1.id = 0x128;
+            txMsg1.format = CANStandard;
+            txMsg1.type = CANData;
+            txMsg1.len = 4;
 
-                    txMsg3.data[0] = 1;  //vcd_stop:1
+            txMsg1.data[0] = m_steering & 0xFF;
+            txMsg1.data[1] = (m_steering >> 8) & 0xFF;
+            txMsg1.data[2] = (m_steering >> 16) & 0xFF;
+            txMsg1.data[3] = (m_steering >> 24) & 0xFF;
 
-                    m_canBus.write(&txMsg3);
-                }
-                else
-                {
-                    // Otherwise, increment the tick counter.
-                    m_ticksRun += m_period;
-                }
-                break;
+            m_canBus.write(&txMsg1);
+
+            m_steerActivate = false;
+        }
+
+        // State responsible for configuring the vehicle's speed and steering over a specified duration.
+        if (m_vcdActivate)
+        {
+            // If the accumulated ticks exceed the target time, stop the movement and deactivate the task.
+            if (m_ticksRun >= m_targetTime + m_period)
+            {
+
+                m_speedingControl.setSpeed(0);
+                m_steeringControl.setAngle(0);
+
+                m_vcdActivate = false;
+
+                struct CAN_Message txMsg3;
+                txMsg3.id = 0x146;
+                txMsg3.format = CANStandard;
+                txMsg3.type = CANData;
+                txMsg3.len = 2;
+
+                txMsg3.data[0] = m_ticksRun & 0xFF;
+                txMsg3.data[1] = (m_ticksRun >> 8) & 0xFF;
+
+                m_canBus.write(&txMsg3);
+            }
+            else
+            {
+                // Otherwise, increment the tick counter.
+                m_ticksRun += m_period;
+            }
+        }
+
+        // Brake state
+        if (m_brakeActivate)
+        {
+            m_steeringControl.setAngle(m_steering); // control the steering angle
+            m_speedingControl.setBrake();
+
+            struct CAN_Message txMsg2;
+            txMsg2.id = 0x141;
+            txMsg2.format = CANStandard;
+            txMsg2.type = CANData;
+            txMsg2.len = 1;
+
+            txMsg2.data[0] = 1; // brake:1
+
+            m_canBus.write(&txMsg2);
+            m_brakeActivate = false;
+        }
+    }
+
+    void CRobotStateMachine::serialCallbackCONFTHROTTLEcommand(char const *a, char *b)
+    {
+        int pwm;
+        uint32_t l_res = sscanf(a, "%d", &pwm);
+        if (1 == l_res)
+        {
+            if (uint8_globalsV_value_of_kl == 30)
+            {
+                m_configureThrottleActivate = true;
+                m_pwmConfigure = pwm;
+            }
+            else
+            {
+                sprintf(b, "kl 30 is required!!");
+            }
+        }
+        else
+        {
+            sprintf(b, "syntax error");
+        }
+    }
+
+    void CRobotStateMachine::serialCallbackMAXTHROTTLEcommand(char const *a, char *b)
+    {
+        int l_speed;
+        uint32_t l_res = sscanf(a, "%d", &l_speed);
+        if (1 == l_res)
+        {
+            if (uint8_globalsV_value_of_kl == 30)
+            {
+                m_maxThrottleActivate = true;
+            }
+            else
+            {
+                sprintf(b, "kl 30 is required!!");
+            }
+        }
+        else
+        {
+            sprintf(b, "syntax error");
+        }
+    }
+
+    void CRobotStateMachine::serialCallbackMINTHROTTLEcommand(char const *a, char *b)
+    {
+        int l_speed;
+        uint32_t l_res = sscanf(a, "%d", &l_speed);
+        if (1 == l_res)
+        {
+            if (uint8_globalsV_value_of_kl == 30)
+            {
+                m_minThrottleActivate = true;
+
+                m_speed = l_speed;
+            }
+            else
+            {
+                sprintf(b, "kl 30 is required!!");
+            }
+        }
+        else
+        {
+            sprintf(b, "syntax error");
         }
     }
 
     /** \brief  Serial callback method for speed command
      *
-     * Serial callback method setting controller to value received for dc motor control values. 
-     * In the case of pid activated, the dc motor control values has to be express in meter per second, otherwise represent the duty cycle of PWM signal in percent. 
+     * Serial callback method setting controller to value received for dc motor control values.
+     * In the case of pid activated, the dc motor control values has to be express in meter per second, otherwise represent the duty cycle of PWM signal in percent.
      * The steering angle has to express in degree, where the positive values marks the right direction and the negative values noticed the left turning direction.
      *
-     * @param a                   string to read data 
-     * @param b                   string to write data 
-     * 
+     * @param a                   string to read data
+     * @param b                   string to write data
+     *
      */
-    void CRobotStateMachine::serialCallbackSPEEDcommand(char const * a, char * b)
+    void CRobotStateMachine::serialCallbackSPEEDcommand(char const *a, char *b)
     {
         int l_speed;
-        uint32_t l_res = sscanf(a,"%d",&l_speed);
+        uint32_t l_res = sscanf(a, "%d", &l_speed);
         if (1 == l_res)
         {
-            if(uint8_globalsV_value_of_kl == 30)
+            if (uint8_globalsV_value_of_kl == 30)
             {
-                if(!m_speedingControl.inRange(l_speed)){ // Check the received reference speed is within range
-                    sprintf(b,"The reference speed command is too high");
+                if (!m_speedingControl.inRange(l_speed))
+                { // Check the received reference speed is within range
+                    sprintf(b, "The reference speed command is too high");
                     return;
                 }
 
-                m_state = 1;
+                // m_state = 1;
+                m_speedActivate = true;
 
                 m_speed = l_speed;
             }
-            else{
-                sprintf(b,"kl 30 is required!!");
+            else
+            {
+                sprintf(b, "kl 30 is required!!");
             }
         }
         else
         {
-            sprintf(b,"syntax error");
+            sprintf(b, "syntax error");
         }
     }
 
@@ -225,89 +318,96 @@ namespace brain{
      * Serial callback method setting controller to value received for steering angle.
      * The steering angle has to express in degree, where the positive values marks the right direction and the negative values noticed the left turning direction.
      *
-     * @param a                   string to read data 
-     * @param b                   string to write data 
-     * 
+     * @param a                   string to read data
+     * @param b                   string to write data
+     *
      */
-    void CRobotStateMachine::serialCallbackSTEERcommand(char const * a, char * b)
+    void CRobotStateMachine::serialCallbackSTEERcommand(char const *a, char *b)
     {
         int l_angle;
-        uint32_t l_res = sscanf(a,"%d",&l_angle);
+        uint32_t l_res = sscanf(a, "%d", &l_angle);
         if (1 == l_res)
         {
-            if(uint8_globalsV_value_of_kl == 30)
+            if (uint8_globalsV_value_of_kl == 30)
             {
-                if( !m_steeringControl.inRange(l_angle)){ // Check the received steering angle
-                    sprintf(b,"The steering angle command is too high");
+                if (!m_steeringControl.inRange(l_angle))
+                { // Check the received steering angle
+                    sprintf(b, "The steering angle command is too high");
                     return;
                 }
 
-                m_state = 2;
+                // m_state = 2;
+
+                m_steerActivate = true;
 
                 m_steering = l_angle;
             }
-            else{
-                sprintf(b,"kl 30 is required!!");
+            else
+            {
+                sprintf(b, "kl 30 is required!!");
             }
         }
         else
         {
-            sprintf(b,"syntax error");
+            sprintf(b, "syntax error");
         }
     }
 
     /** \brief  Serial callback actions for brake command
      *
-     * This method aims to change the state of controller to brake and sets the steering angle to the received value. 
+     * This method aims to change the state of controller to brake and sets the steering angle to the received value.
      *
-     * @param a                   string to read data 
+     * @param a                   string to read data
      * @param b                   string to write data
-     * 
+     *
      */
-    void CRobotStateMachine::serialCallbackBRAKEcommand(char const * a, char * b)
+    void CRobotStateMachine::serialCallbackBRAKEcommand(char const *a, char *b)
     {
         int l_angle;
-        uint32_t l_res = sscanf(a,"%d",&l_angle);
-        if(1 == l_res)
+        uint32_t l_res = sscanf(a, "%d", &l_angle);
+        if (1 == l_res)
         {
-            if(!m_steeringControl.inRange(l_angle)){
-                sprintf(b,"The steering angle command is too high");
+            if (!m_steeringControl.inRange(l_angle))
+            {
+                sprintf(b, "The steering angle command is too high");
                 return;
             }
-            
-            m_state = 3;
 
-            m_steering = l_angle;           
+            // m_state = 3;
+            m_brakeActivate = true;
+
+            m_steering = l_angle;
         }
         else
         {
-            sprintf(b,"syntax error");
+            sprintf(b, "syntax error");
         }
     }
 
     /** \brief  Serial callback actions for brake command
      *
-     * This method aims to change the state of controller to brake and sets the steering angle to the received value. 
+     * This method aims to change the state of controller to brake and sets the steering angle to the received value.
      *
-     * @param a                   string to read data 
+     * @param a                   string to read data
      * @param b                   string to write data
-     * 
+     *
      */
-    void CRobotStateMachine::serialCallbackVCDcommand(char const * message, char * response)
+    void CRobotStateMachine::serialCallbackVCDcommand(char const *message, char *response)
     {
         int speed, steer;
         uint8_t time_deciseconds;
 
         uint8_t parsed = sscanf(message, "%d;%d;%hhu", &speed, &steer, &time_deciseconds);
 
-        if(uint8_globalsV_value_of_kl != 30){
-            sprintf(response,"kl 30 is required!!");
+        if (uint8_globalsV_value_of_kl != 30)
+        {
+            sprintf(response, "kl 30 is required!!");
             return;
         }
 
         m_targetTime = time_deciseconds;
 
-        if(parsed == 3 && speed <= 500 && speed >= -500 && steer <= 232 && steer >= -232)
+        if (parsed == 3 && speed <= 500 && speed >= -500 && steer <= 232 && steer >= -232)
         {
             sprintf(response, "%d;%d;%d", speed, steer, time_deciseconds);
 
@@ -315,7 +415,8 @@ namespace brain{
 
             m_targetTime = time_deciseconds * scale_ds_to_ms;
 
-            m_state = 4;
+            //m_state = 4;
+            m_vcdActivate = true;
 
             m_steeringControl.setAngle(steer);
             m_speedingControl.setSpeed(-speed);

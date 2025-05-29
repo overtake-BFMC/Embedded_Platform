@@ -60,79 +60,95 @@ namespace drivers{
     {
     };
 
+    int CSpeedingMotor::interpolatePwm(int speed, const SpeedPwmPair* table, int size) 
+    {
+        if (speed <= table[0].returnSpeed)
+            return table[0].pwm;
+        if (speed >= table[size - 1].returnSpeed)
+            return table[size - 1].pwm;
+
+        for (int i = 1; i < size; ++i) 
+        {
+            if (speed <= table[i].returnSpeed) 
+            {
+                int s1 = table[i - 1].returnSpeed;
+                int s2 = table[i].returnSpeed;
+                int pwm1 = table[i - 1].pwm;
+                int pwm2 = table[i].pwm;
+                return pwm1 + ((pwm2 - pwm1) * (speed - s1)) / (s2 - s1);
+            }
+        }
+
+        return table[size - 1].pwm;
+    }
+
+    int CSpeedingMotor::pwmFromSpeed(int speed) 
+    {
+        if (speed > 0)
+            return interpolatePwm(speed, forwardTable, sizeof(forwardTable)/sizeof(SpeedPwmPair));
+        else
+            return interpolatePwm(speed, reverseTable, sizeof(reverseTable)/sizeof(SpeedPwmPair));
+    }
+
     /** @brief  It modifies the speed reference of the brushless motor, which controls the speed of the wheels. 
      *
      *  @param f_speed      speed in m/s, where the positive value means forward direction and negative value the backward direction. 
      */
-    void CSpeedingMotor::setSpeed(int f_speed)
+    int CSpeedingMotor::setSpeed(int f_speed)
     {
-        step_value = interpolate(-f_speed, speedValuesP, speedValuesN, stepValues, 25);
+        if ( !f_speed  )
+        {
+            m_pwm_pin.pulsewidth_us(zero_default);
+            return 0;
+        }
 
-        m_pwm_pin.pulsewidth_us(conversion(f_speed));
+        int absSpeed = f_speed > 0 ? f_speed : -f_speed;
+
+        if( absSpeed% 50 == 0)
+        {
+            int index = (absSpeed/ 50) - 1;
+
+            if( f_speed > 0)
+            {
+                //printf( "NAPRED %d", f_speed );
+                m_pwm_pin.pulsewidth_us(forwardTable[index].pwm);
+                return forwardTable[index].returnSpeed;
+            }
+            else
+            {
+                //printf( "UNAZAD %d", f_speed );
+                m_pwm_pin.pulsewidth_us(reverseTable[index].pwm);
+                return -reverseTable[index].returnSpeed;
+            }
+        }
+
+        m_pwm_pin.pulsewidth_us(pwmFromSpeed(absSpeed));
+        return f_speed;          
     };
 
     /** @brief  It puts the brushless motor into brake state, 
      */
     void CSpeedingMotor::setBrake()
     {
-        m_pwm_pin.write(zero_default);
+        m_pwm_pin.pulsewidth_us(zero_default);
     };
 
-    /**
-    * @brief Interpolates values based on speed input.
-    *
-    * This function interpolates `stepValues` based on the provided `speed` input.
-    * The interpolation is made using `steeringValueP` and `steeringValueN` as reference values.
-    *
-    * @param speed The input speed value for which the values need to be interpolated.
-    * @param speedValuesP Positive reference values for speed.
-    * @param speedValuesN Negative reference values for speed.
-    * @param stepValues Step values corresponding to speedValueP and speedValueN which need to be interpolated.
-    * @param size The size of the arrays.
-    * @return The new value for the step value
-    */
-    int16_t CSpeedingMotor::interpolate(int speed, const int speedValuesP[], const int speedValuesN[], const int stepValues[], int size)
+    void CSpeedingMotor::maxThrottle()
     {
-        if(speed <= speedValuesP[0]){
-            if (speed >= speedValuesN[0])
-            {
-                return stepValues[0];
-            }
-            else{
-                for(uint8_t i=1; i<size; i++)
-                {
-                    if (speed >= speedValuesN[i])
-                    {
-                        int slope = (stepValues[i] - stepValues[i-1]) / (speedValuesN[i] - speedValuesN[i-1]);
-                        return stepValues[i-1] + slope * (speed - speedValuesN[i-1]);
-                    }
-                }
-            }
-            
-        } 
-        if(speed >= speedValuesP[size-1]) return stepValues[size-1];
-        if(speed <= speedValuesN[size-1]) return stepValues[size-1];
+        m_pwm_pin.pulsewidth_us(min_throttle);
+    };
 
-        for(uint8_t i=1; i<size; i++)
-        {
-            if (speed <= speedValuesP[i])
-            {
-                int slope = (stepValues[i] - stepValues[i-1]) / (speedValuesP[i] - speedValuesP[i-1]);
-                return stepValues[i-1] + slope * (speed - speedValuesP[i-1]);
-            }
-        }
+    void CSpeedingMotor::minThrottle()
+    {
+        m_pwm_pin.pulsewidth_us(max_throttle);
+    };
 
-        return -1;
-    }
-
-    /** @brief  It converts speed reference to duty cycle for pwm signal. 
-     * 
-     *  @param f_speed    speed
-     *  \return         pwm value
-     */
-    int CSpeedingMotor::conversion(int f_speed)
-    {   
-        return ((step_value * f_speed)/100 + zero_default);
+    void CSpeedingMotor::configureThrottle(uint16_t configure_throttle)
+    {
+        if( min_throttle < configure_throttle && configure_throttle < max_throttle)
+            m_pwm_pin.pulsewidth_us(configure_throttle);
+        else
+            m_pwm_pin.pulsewidth_us(zero_default);
     };
 
     /**

@@ -61,7 +61,7 @@ namespace periodics
 
         m_canBus.write(&txMsg);
 
-        printf( "IR %d\n\r", m_value);
+        //printf( "IR %d\n\r", m_value);
     }
 
 }; // namespace periodics

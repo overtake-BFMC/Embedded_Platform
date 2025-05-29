@@ -783,13 +783,13 @@ namespace periodics{
 
         m_canBus.write(&txMsg);
 
-        printf("@imu:%d.%03d;%d.%03d;%d.%03d;%d.%03d;%d.%03d;%d.%03d;;\r\n",
-            s16_euler_r_deg/1000, abs(s16_euler_r_deg%1000),
-            s16_euler_p_deg/1000, abs(s16_euler_p_deg%1000),
-            s16_euler_h_deg/1000, abs(s16_euler_h_deg%1000),
-            m_velocityX/1000, abs(m_velocityX%1000),
-            m_velocityY/1000, abs(m_velocityY%1000),
-            m_velocityZ/1000, abs(m_velocityZ%1000));        
+        //printf("@imu:%d.%03d;%d.%03d;%d.%03d;%d.%03d;%d.%03d;%d.%03d;;\r\n",
+            // s16_euler_r_deg/1000, abs(s16_euler_r_deg%1000),
+            // s16_euler_p_deg/1000, abs(s16_euler_p_deg%1000),
+            // s16_euler_h_deg/1000, abs(s16_euler_h_deg%1000),
+            // m_velocityX/1000, abs(m_velocityX%1000),
+            // m_velocityY/1000, abs(m_velocityY%1000),
+            // m_velocityZ/1000, abs(m_velocityZ%1000));        
     }
 
 }; // namespace periodics
