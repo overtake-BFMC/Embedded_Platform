@@ -33,6 +33,7 @@ namespace drivers
             void write(CAN_Message* msg);   //int write(CANMessage     msg);
             bool frequency( int canSpeed);
             uint8_t checkReceive(void);
+            void sendMessage( int msgId, int msgData, CANFormat msgFormat, CANType msgType, uint8_t msgLength );
 
         private:
             mcp2515& m_canBus;

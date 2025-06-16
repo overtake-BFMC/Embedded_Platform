@@ -19,9 +19,7 @@ namespace periodics
     , m_triggerPin(f_triggerPin)
     , m_echoPin(f_echoPin)
     , m_canBus(f_canBus)
-    //, m_isActive(false)
-
-    //, m_isConnected(true)
+    , m_isActive(false)
     {
         m_triggerPin = 0;
     }
@@ -32,7 +30,7 @@ namespace periodics
     {
     }
 
-    void CDistancesensorFront::serialCallbackDISTANCEFRONTCommand(char const *a, char *b)
+    void CDistancesensorFront::callbackDISTANCEFRONTCommand(char const *a, char *b)
     {
         uint8_t l_isActivate = 0;
         uint8_t l_res = sscanf(a, "%hhu", &l_isActivate);
@@ -51,30 +49,7 @@ namespace periodics
             sprintf(b,"syntax error");
         }
     }
-/**
-    bool CDistancesensorFront::isSensorConnected()
-    {
-        m_triggerPin = 1;
-        wait_us(10);
-        m_triggerPin = 0;
-
-        mbed::Timer timer;
-        timer.start();
-        
-        // 50ms timeout
-        const uint32_t timeout_us = 50000; 
-
-        while (m_echoPin == 0) 
-            if (timer.elapsed_time().count() > timeout_us)
-            {
-                timer.stop();
-                return false;
-            }
-        
-        timer.stop();
-        return true;
-    }
-*/
+    
     void CDistancesensorFront::DistanceMeasure()
     {
         m_triggerPin = 1;
@@ -106,17 +81,7 @@ namespace periodics
 
         DistanceMeasure();
 
-        struct CAN_Message txMsg;
-        txMsg.id = 0x11E;
-        txMsg.format = CANStandard;
-        txMsg.type = CANData;
-        txMsg.len = 4;
-        txMsg.data[0] = m_distance & 0xFF;
-        txMsg.data[1] = (m_distance >> 8) & 0xFF;
-        txMsg.data[2] = (m_distance >> 16) & 0xFF;
-        txMsg.data[3] = (m_distance >> 24) & 0xFF;
-
-        m_canBus.write(&txMsg);
+        m_canBus.sendMessage( 0x11E, m_distance, CANStandard, CANData, 4 );
     }
 
 }; // namespace periodics

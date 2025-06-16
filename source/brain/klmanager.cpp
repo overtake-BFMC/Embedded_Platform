@@ -45,8 +45,8 @@ namespace brain
         brain::CRobotStateMachine& f_robotStateMachine,
         periodics::CResourcemonitor& f_resourceM,
         periodics::CDistancesensorFront& f_distanceF,
-        periodics::CIRsensor& f_irSensor
-       // periodics::CDistancesensorRight& f_distanceR
+        periodics::CIRsensor& f_irSensor,
+        periodics::CDistancesensorRight& f_distanceR
     )
     : m_klvalue(0)
     , m_alerts(f_alerts)
@@ -55,7 +55,7 @@ namespace brain
     , m_resourceM(f_resourceM)
     , m_distanceF(f_distanceF)
     , m_irSensor(f_irSensor)
-    //, m_distanceR(f_distanceR)
+    , m_distanceR(f_distanceR)
     {
         /* constructor behaviour */
     }
@@ -66,7 +66,7 @@ namespace brain
     {
     };
 
-    void CKlmanager::serialCallbackKLCommand(const char* a, char* b)
+    void CKlmanager::callbackKLCommand(const char* a, char* b)
     {
         uint8_t l_keyValue = 0;
 
@@ -83,37 +83,36 @@ namespace brain
                 if(l_keyValue == 0 && (uint8_globalsV_value_of_kl!=0))
                 {
                     sprintf(b,"%d",l_keyValue);
-                    m_imu.serialCallbackIMUcommand("0", response);
+                    m_imu.callbackIMUcommand("0", response);
                     ThisThread::sleep_for(chrono::milliseconds(50));
-                    m_distanceF.serialCallbackDISTANCEFRONTCommand("0", response);
+                    m_distanceF.callbackDISTANCEFRONTCommand("0", response);
                     ThisThread::sleep_for(chrono::milliseconds(50));
-                    m_irSensor.serialCallbackIRSENSORCommand("0", response);
+                    m_irSensor.callbackIRSENSORCommand("0", response);
                     ThisThread::sleep_for(chrono::milliseconds(50));
-                   // m_distanceR.serialCallbackDISTANCERIGHTCommand("0", response);
-                   // ThisThread::sleep_for(chrono::milliseconds(50));
-                    // m_robotStateMachine.serialCallbackVCDcommand("0;0;2", response);
-                    m_robotStateMachine.serialCallbackBRAKEcommand("0", response);
+                    m_distanceR.callbackDISTANCERIGHTCommand("0", response);
                     ThisThread::sleep_for(chrono::milliseconds(50));
-                    m_resourceM.serialCallbackRESMONCommand("0", response);
+                    m_robotStateMachine.callbackBRAKEcommand("0", response);
+                    ThisThread::sleep_for(chrono::milliseconds(50));
+                    m_resourceM.callbackRESOURCEMONCommand("0", response);
                     uint8_globalsV_value_of_kl = 0;
                     m_alerts.alertsCommand("3", response);
                 }
                 if((l_keyValue == 15 || l_keyValue == 30) && (uint8_globalsV_value_of_kl != 15)) 
                 {
                     sprintf(b,"%d",l_keyValue);
-                    m_robotStateMachine.serialCallbackVCDcommand("0;0;2", response);
+                    m_robotStateMachine.callbackVCDcommand("0;0;2", response);
                     uint8_globalsV_value_of_kl = 15;
-                    if(!bool_globalsV_imu_isActive) m_imu.serialCallbackIMUcommand("1", response);
-                    if(!bool_globalsV_resource_isActive) m_resourceM.serialCallbackRESMONCommand("1", response);
-                    if(!bool_globalsV_distanceFront_isActive) m_distanceF.serialCallbackDISTANCEFRONTCommand("1", response);
-                    if(!bool_globalsV_irsensor_isActive) m_irSensor.serialCallbackIRSENSORCommand("1", response);
-                    //if(!bool_globalsV_distanceRight_isActive) m_distanceR.serialCallbackDISTANCERIGHTCommand("1", response);
+                    if(!bool_globalsV_imu_isActive) m_imu.callbackIMUcommand("1", response);
+                    if(!bool_globalsV_resource_isActive) m_resourceM.callbackRESOURCEMONCommand("1", response);
+                    if(!bool_globalsV_distanceFront_isActive) m_distanceF.callbackDISTANCEFRONTCommand("1", response);
+                    if(!bool_globalsV_irsensor_isActive) m_irSensor.callbackIRSENSORCommand("1", response);
+                    if(!bool_globalsV_distanceRight_isActive) m_distanceR.callbackDISTANCERIGHTCommand("1", response);
                     m_alerts.alertsCommand("4", response);
                 }
                 if(l_keyValue == 30 && (uint8_globalsV_value_of_kl != 30)){
                     sprintf(b,"%d",l_keyValue);
                     uint8_globalsV_value_of_kl = 30;
-                    //m_robotStateMachine.serialCallbackVCDcommand("0;0;2", response);
+                    //m_robotStateMachine.callbackVCDcommand("0;0;2", response);
                     m_alerts.alertsCommand("2", response);
                 }
             }

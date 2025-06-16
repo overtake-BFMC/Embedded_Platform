@@ -32,8 +32,6 @@ namespace drivers
 
         if (this->m_can.read(&rxMsg) == CAN_OK)
         {
-            //printf("primio id %d\n\r;", rxMsg.id);
-
             if (rxMsg.id == 0x98)
             {
                 if( ++m_shutDownCounter > 1 )
@@ -116,18 +114,7 @@ namespace drivers
                 }
             }
 
-            struct CAN_Message txMsgResp;
-            txMsgResp.id = 0x99;
-            txMsgResp.format = CANStandard;
-            txMsgResp.type = CANData;
-            txMsgResp.len = 4;
-
-            txMsgResp.data[0] = rxMsg.id & 0xFF;
-            txMsgResp.data[1] = (rxMsg.id >> 8) & 0xFF;
-            txMsgResp.data[2] = (rxMsg.id >> 16) & 0xFF;
-            txMsgResp.data[3] = (rxMsg.id >> 24) & 0xFF;
-
-            m_can.write(&txMsgResp);
+            m_can.sendMessage( 0x99, rxMsg.id, CANStandard, CANData, 4 );
         }
     }
 

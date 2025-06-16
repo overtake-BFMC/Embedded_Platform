@@ -20,7 +20,7 @@ namespace periodics
     CResourcemonitor::~CResourcemonitor() {
     };
 
-    void CResourcemonitor::serialCallbackRESMONCommand(char const *a, char *b)
+    void CResourcemonitor::callbackRESOURCEMONCommand(char const *a, char *b)
     {
         uint8_t l_isActivate = 0;
         uint8_t l_res = sscanf(a, "%hhu", &l_isActivate);

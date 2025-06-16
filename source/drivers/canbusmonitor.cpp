@@ -8,7 +8,7 @@ namespace drivers
      *
      */
     CCanBusMonitor::CCanBusMonitor(mcp2515 &f_canBus)
-        :m_canBus(f_canBus)
+        : m_canBus(f_canBus)
     {
     }
 
@@ -16,7 +16,6 @@ namespace drivers
      */
     CCanBusMonitor::~CCanBusMonitor() {
     };
-
 
     bool CCanBusMonitor::frequency(int canSpeed)
     {
@@ -101,6 +100,21 @@ namespace drivers
             return CAN_NOMSG;
     }
 
-    
+    void CCanBusMonitor::sendMessage(int msgId, int msgData, CANFormat msgFormat, CANType msgType, uint8_t msgLength)
+    {
+        struct CAN_Message txMsg;
+
+        txMsg.id = msgId;
+        txMsg.format = msgFormat;
+        txMsg.type = msgType;
+        txMsg.len = msgLength;
+
+        txMsg.data[0] = msgData & 0xFF;
+
+        for( size_t i = 1; i < msgLength; i++ )
+            txMsg.data[i] = ( msgData >> (i*8) ) & 0xFF;
+            
+        this->write(&txMsg);
+    }
 
 }; // namespace drivers

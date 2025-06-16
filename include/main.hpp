@@ -46,8 +46,6 @@
 #include <periodics/resourcemonitor.hpp>
 /* Header file for global variables */
 #include <brain/globalsv.hpp>
-/* Header file for the serial communication functionality */
-#include <drivers/serialmonitor.hpp>
 /* Header file for the robot state machine, which deals with the cars movement (steering and speed) */
 #include <brain/robotstatemachine.hpp>
 /* Header file for the task manager library, which  applies periodically the fun function of it's children*/
@@ -57,7 +55,8 @@
 /* Header file for the Distancesensor functionality */
 #include <periodics/distancesensorfront.hpp>
 /* Header file for the Distancesensorright functionality */
-//#include <periodics/distancesensorright.hpp>
+#include <periodics/distancesensorright.hpp>
+/* Header file for the CanBusMonitor functionality */
 #include <drivers/canbusmonitor.hpp>
 /* Header file for the Canmask functionality */
 #include <drivers/canmask.hpp>

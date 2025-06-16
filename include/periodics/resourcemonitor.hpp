@@ -28,7 +28,7 @@ namespace periodics
             /* Destructor */
             ~CResourcemonitor();
 
-            void serialCallbackRESMONCommand(char const * a, char * b);
+            void callbackRESOURCEMONCommand(char const * a, char * b);
 
         private:
             /* private variables & method member */

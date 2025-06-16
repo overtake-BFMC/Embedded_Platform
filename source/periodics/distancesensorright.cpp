@@ -14,15 +14,13 @@ namespace periodics
         std::chrono::milliseconds f_period,
         mbed::DigitalOut f_triggerPin,
         mbed::DigitalIn f_echoPin,
-        UnbufferedSerial& f_serial
+        drivers::CCanBusMonitor& f_canBus
     )
     : utils::CTask(f_period)
     , m_triggerPin(f_triggerPin)
     , m_echoPin(f_echoPin)
-    , m_period(f_period.count())
+    , m_canBus(f_canBus)
     , m_isActive(false)
-    , m_serial(f_serial)
-    , m_isConnected(true)
     {
         m_triggerPin = 0;
     }
@@ -33,7 +31,7 @@ namespace periodics
     {
     }
 
-    void CDistancesensorRight::serialCallbackDISTANCERIGHTCommand(char const *a, char *b)
+    void CDistancesensorRight::callbackDISTANCERIGHTCommand(char const *a, char *b)
     {
         uint8_t l_isActivate = 0;
         uint8_t l_res = sscanf(a, "%hhu", &l_isActivate);
@@ -51,29 +49,6 @@ namespace periodics
         }else{
             sprintf(b,"syntax error");
         }
-    }
-
-    bool CDistancesensorRight::isSensorConnected()
-    {
-        m_triggerPin = 1;
-        wait_us(10);
-        m_triggerPin = 0;
-
-        mbed::Timer timer;
-        timer.start();
-        
-        // 50ms timeout
-        const uint32_t timeout_us = 50000; 
-
-        while (m_echoPin == 0) 
-            if (timer.elapsed_time().count() > timeout_us)
-            {
-                timer.stop();
-                return false;
-            }
-        
-        timer.stop();
-        return true;
     }
 
     void CDistancesensorRight::DistanceMeasure()
@@ -100,22 +75,12 @@ namespace periodics
     void CDistancesensorRight::_run()
     {
         /* Run method behaviour */
-        if(!m_isActive && !m_isConnected) 
+        if(!m_isActive) 
             return;
-
-        if (!isSensorConnected()) {
-            //m_serial.write("@distanceF:DISCONNECTED;;\r\n", strlen("@distanceF:DISCONNECTED;;\r\n"));
-            m_isConnected = false;
-            return;  // Skip measurement if sensor is disconnected
-        }
 
         DistanceMeasure();
 
-        char buffer[_18_chars];
-        
-        snprintf(buffer, sizeof(buffer), "@distanceR:%d;;\r\n", (int)m_distance);
-
-        m_serial.write(buffer, strlen(buffer));
+        m_canBus.sendMessage( 0x120, m_distance, CANStandard, CANData, 4);
     }
 
 }; // namespace periodics

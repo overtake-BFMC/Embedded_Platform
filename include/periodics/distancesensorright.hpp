@@ -6,6 +6,8 @@
 #include <chrono>
 #include <utils/task.hpp>
 #include <brain/globalsv.hpp>
+#include <drivers/mcp2515.hpp>
+#include <drivers/canbusmonitor.hpp>
 
 namespace periodics
 {
@@ -21,21 +23,18 @@ namespace periodics
                 std::chrono::milliseconds f_period,
                 mbed::DigitalOut f_triggerPin,
                 mbed::DigitalIn f_echoPin,
-                UnbufferedSerial& f_serial
+                drivers::CCanBusMonitor& f_canBus
             );
             /* Destructor */
             ~CDistancesensorRight();
 
-            void serialCallbackDISTANCERIGHTCommand(char const * a, char * b);
-            bool isSensorConnected();
+            void callbackDISTANCERIGHTCommand(char const * a, char * b);
             void DistanceMeasure();
         private:
             /* private variables & method member */
             mbed::DigitalOut m_triggerPin;
             mbed::DigitalIn m_echoPin;
-            uint64_t m_period;
-            float m_distance;
-            bool m_isConnected;
+            uint32_t m_distance;
 
             /* Run method */
             virtual void        _run();
@@ -43,7 +42,7 @@ namespace periodics
             /** @brief Active flag  */
             bool m_isActive;
 
-            UnbufferedSerial& m_serial;
+            drivers::CCanBusMonitor& m_canBus;
 
     }; // class CDistancesensorright
 }; // namespace periodics

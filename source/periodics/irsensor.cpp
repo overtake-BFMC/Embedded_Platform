@@ -24,7 +24,7 @@ namespace periodics
     {
     }
 
-    void CIRsensor::serialCallbackIRSENSORCommand(char const *a, char *b)
+    void CIRsensor::callbackIRSENSORCommand(char const *a, char *b)
     {
         uint8_t l_isActivate = 0;
         uint8_t l_res = sscanf(a, "%hhu", &l_isActivate);
@@ -52,14 +52,7 @@ namespace periodics
 
         m_value = m_pin.read();
 
-        struct CAN_Message txMsg;
-        txMsg.id = 0x11D;
-        txMsg.format = CANStandard;
-        txMsg.type = CANData;
-        txMsg.len = 1;
-        txMsg.data[0] = m_value & 0xFF;
-
-        m_canBus.write(&txMsg);
+        m_canBus.sendMessage( 0x11D, m_value, CANStandard, CANData, 1 );
 
         //printf( "IR %d\n\r", m_value);
     }

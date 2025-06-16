@@ -28,15 +28,13 @@ namespace periodics
             /* Destructor */
             ~CDistancesensorFront();
 
-            void serialCallbackDISTANCEFRONTCommand(char const * a, char * b);
-            //bool isSensorConnected();
+            void callbackDISTANCEFRONTCommand(char const * a, char * b);
             void DistanceMeasure();
         private:
             /* private variables & method member */
             mbed::DigitalOut m_triggerPin;
             mbed::DigitalIn m_echoPin;
             uint32_t m_distance;
-            //bool m_isConnected;
 
             /* Run method */
             virtual void        _run();

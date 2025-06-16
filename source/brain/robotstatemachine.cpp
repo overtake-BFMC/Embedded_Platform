@@ -71,20 +71,7 @@ namespace brain
         {
             m_speedingControl.configureThrottle(m_pwmConfigure);
 
-            struct CAN_Message txMsg;
-            txMsg.id = 0x95;
-            txMsg.format = CANStandard;
-            txMsg.type = CANData;
-            txMsg.len = 4;
-
-            txMsg.data[0] = m_pwmConfigure & 0xFF;
-            txMsg.data[1] = (m_pwmConfigure >> 8) & 0xFF;
-            txMsg.data[2] = (m_pwmConfigure >> 16) & 0xFF;
-            txMsg.data[3] = (m_pwmConfigure >> 24) & 0xFF;
-
-            m_canBus.write(&txMsg);
-
-
+            m_canBus.sendMessage(0x95, m_pwmConfigure, CANStandard, CANData, 4 );
             m_configureThrottleActivate = false;
         }
         
@@ -105,19 +92,7 @@ namespace brain
         {
             int returnSpeed = m_speedingControl.setSpeed(m_speed); // Set the reference speed
 
-            struct CAN_Message txMsg;
-            txMsg.id = 0x123;
-            txMsg.format = CANStandard;
-            txMsg.type = CANData;
-            txMsg.len = 4;
-
-            txMsg.data[0] = returnSpeed & 0xFF;
-            txMsg.data[1] = (returnSpeed >> 8) & 0xFF;
-            txMsg.data[2] = (returnSpeed >> 16) & 0xFF;
-            txMsg.data[3] = (returnSpeed >> 24) & 0xFF;
-
-            m_canBus.write(&txMsg);
-
+            m_canBus.sendMessage(0x123, returnSpeed, CANStandard, CANData, 4 );
             m_speedActivate = false;
         }
 
@@ -142,19 +117,7 @@ namespace brain
                 m_steeringControl.setAngle(-50);
             }
 
-            struct CAN_Message txMsg1;
-            txMsg1.id = 0x128;
-            txMsg1.format = CANStandard;
-            txMsg1.type = CANData;
-            txMsg1.len = 4;
-
-            txMsg1.data[0] = m_steering & 0xFF;
-            txMsg1.data[1] = (m_steering >> 8) & 0xFF;
-            txMsg1.data[2] = (m_steering >> 16) & 0xFF;
-            txMsg1.data[3] = (m_steering >> 24) & 0xFF;
-
-            m_canBus.write(&txMsg1);
-
+            m_canBus.sendMessage(0x128, m_steering, CANStandard, CANData, 4 );
             m_steerActivate = false;
         }
 
@@ -170,16 +133,7 @@ namespace brain
 
                 m_vcdActivate = false;
 
-                struct CAN_Message txMsg3;
-                txMsg3.id = 0x146;
-                txMsg3.format = CANStandard;
-                txMsg3.type = CANData;
-                txMsg3.len = 2;
-
-                txMsg3.data[0] = m_ticksRun & 0xFF;
-                txMsg3.data[1] = (m_ticksRun >> 8) & 0xFF;
-
-                m_canBus.write(&txMsg3);
+                m_canBus.sendMessage(0x146, m_ticksRun, CANStandard, CANData, 2 );
             }
             else
             {
@@ -194,20 +148,13 @@ namespace brain
             m_steeringControl.setAngle(m_steering); // control the steering angle
             m_speedingControl.setBrake();
 
-            struct CAN_Message txMsg2;
-            txMsg2.id = 0x141;
-            txMsg2.format = CANStandard;
-            txMsg2.type = CANData;
-            txMsg2.len = 1;
+            m_canBus.sendMessage(0x141, 1, CANStandard, CANData, 1); //1 == true
 
-            txMsg2.data[0] = 1; // brake:1
-
-            m_canBus.write(&txMsg2);
             m_brakeActivate = false;
         }
     }
 
-    void CRobotStateMachine::serialCallbackCONFTHROTTLEcommand(char const *a, char *b)
+    void CRobotStateMachine::callbackCONFTHROTTLEcommand(char const *a, char *b)
     {
         int pwm;
         uint32_t l_res = sscanf(a, "%d", &pwm);
@@ -229,7 +176,7 @@ namespace brain
         }
     }
 
-    void CRobotStateMachine::serialCallbackMAXTHROTTLEcommand(char const *a, char *b)
+    void CRobotStateMachine::callbackMAXTHROTTLEcommand(char const *a, char *b)
     {
         int l_speed;
         uint32_t l_res = sscanf(a, "%d", &l_speed);
@@ -250,7 +197,7 @@ namespace brain
         }
     }
 
-    void CRobotStateMachine::serialCallbackMINTHROTTLEcommand(char const *a, char *b)
+    void CRobotStateMachine::callbackMINTHROTTLEcommand(char const *a, char *b)
     {
         int l_speed;
         uint32_t l_res = sscanf(a, "%d", &l_speed);
@@ -283,7 +230,7 @@ namespace brain
      * @param b                   string to write data
      *
      */
-    void CRobotStateMachine::serialCallbackSPEEDcommand(char const *a, char *b)
+    void CRobotStateMachine::callbackSPEEDcommand(char const *a, char *b)
     {
         int l_speed;
         uint32_t l_res = sscanf(a, "%d", &l_speed);
@@ -322,7 +269,7 @@ namespace brain
      * @param b                   string to write data
      *
      */
-    void CRobotStateMachine::serialCallbackSTEERcommand(char const *a, char *b)
+    void CRobotStateMachine::callbackSTEERcommand(char const *a, char *b)
     {
         int l_angle;
         uint32_t l_res = sscanf(a, "%d", &l_angle);
@@ -361,7 +308,7 @@ namespace brain
      * @param b                   string to write data
      *
      */
-    void CRobotStateMachine::serialCallbackBRAKEcommand(char const *a, char *b)
+    void CRobotStateMachine::callbackBRAKEcommand(char const *a, char *b)
     {
         int l_angle;
         uint32_t l_res = sscanf(a, "%d", &l_angle);
@@ -392,7 +339,7 @@ namespace brain
      * @param b                   string to write data
      *
      */
-    void CRobotStateMachine::serialCallbackVCDcommand(char const *message, char *response)
+    void CRobotStateMachine::callbackVCDcommand(char const *message, char *response)
     {
         int speed, steer;
         uint8_t time_deciseconds;

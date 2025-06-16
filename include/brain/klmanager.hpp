@@ -41,7 +41,7 @@
 #include <periodics/resourcemonitor.hpp>
 #include <periodics/distancesensorfront.hpp>
 #include <periodics/irsensor.hpp>
-//#include <periodics/distancesensorright.hpp>
+#include <periodics/distancesensorright.hpp>
 #include <brain/globalsv.hpp>
 
 namespace brain
@@ -60,13 +60,13 @@ namespace brain
                 brain::CRobotStateMachine& f_robotStateMachine,
                 periodics::CResourcemonitor& f_resourceM,
                 periodics::CDistancesensorFront& f_distanceF,
-                periodics::CIRsensor& f_irSensor
-               // periodics::CDistancesensorRight& f_distanceR   
+                periodics::CIRsensor& f_irSensor,
+                periodics::CDistancesensorRight& f_distanceR   
             );
             /* Destructor */
             ~CKlmanager();
 
-            void serialCallbackKLCommand(const char* message, char* response);
+            void callbackKLCommand(const char* message, char* response);
 
             uint8_t m_klvalue;
 
@@ -78,7 +78,7 @@ namespace brain
             periodics::CResourcemonitor& m_resourceM;
             periodics::CDistancesensorFront& m_distanceF;
             periodics::CIRsensor& m_irSensor;
-           // periodics::CDistancesensorRight& m_distanceR;
+            periodics::CDistancesensorRight& m_distanceR;
     }; // class CKlmanager
 }; // namespace brain
 

@@ -33,7 +33,7 @@
 
 #define dummy_value 15
 
-UnbufferedSerial g_rpi(USBTX, USBRX, 115200);
+//UnbufferedSerial g_rpi(USBTX, USBRX, 115200);
 
 SPI spi(PB_15, PB_14, PB_13); // MOSI, MISO, SCK
 mcp2515 mcp(spi, PB_12);
@@ -62,28 +62,28 @@ brain::CRobotStateMachine g_robotstatemachine(g_baseTick * 50, can, g_steeringDr
 
 periodics::CResourcemonitor g_resourceMonitor(g_baseTick * 5000, can);
 
-periodics::CDistancesensorFront g_distanceSensorFront(g_baseTick * 200, D8, D7, can);
+periodics::CDistancesensorFront g_distanceSensorFront(g_baseTick * 200, D8, D7, can); //d8 trigger d7 echo 
 
-// periodics::CDistancesensorRight g_distanceSensorRight(g_baseTick * 200, D, D, g_rpi);
+periodics::CDistancesensorRight g_distanceSensorRight(g_baseTick * 200, D13, D12, can);
 
 periodics::CIRsensor g_irsensor(g_baseTick * 50, PA_10, can);
 
-brain::CKlmanager g_klmanager(g_alerts, g_imu, g_robotstatemachine, g_resourceMonitor, g_distanceSensorFront, g_irsensor);
+brain::CKlmanager g_klmanager(g_alerts, g_imu, g_robotstatemachine, g_resourceMonitor, g_distanceSensorFront, g_irsensor, g_distanceSensorRight);
 
 drivers::CCanMask::canSubscriberMap g_canMonitorSubscribers = {
-    {0x10A, mbed::callback(&g_robotstatemachine, &brain::CRobotStateMachine::serialCallbackSPEEDcommand)},
-    {0x90, mbed::callback(&g_robotstatemachine, &brain::CRobotStateMachine::serialCallbackMAXTHROTTLEcommand)},
-    {0x92, mbed::callback(&g_robotstatemachine, &brain::CRobotStateMachine::serialCallbackMINTHROTTLEcommand)},
-    {0x91, mbed::callback(&g_robotstatemachine, &brain::CRobotStateMachine::serialCallbackCONFTHROTTLEcommand)},
-    {0x10F, mbed::callback(&g_robotstatemachine, &brain::CRobotStateMachine::serialCallbackSTEERcommand)},
-    {0x105, mbed::callback(&g_robotstatemachine, &brain::CRobotStateMachine::serialCallbackBRAKEcommand)},
-    {0x114, mbed::callback(&g_robotstatemachine, &brain::CRobotStateMachine::serialCallbackVCDcommand)},
-    {0x137, mbed::callback(&g_imu, &periodics::CImu::serialCallbackIMUcommand)},
-    {0x100, mbed::callback(&g_klmanager, &brain::CKlmanager::serialCallbackKLCommand)},
-    {0x13C, mbed::callback(&g_distanceSensorFront, &periodics::CDistancesensorFront::serialCallbackDISTANCEFRONTCommand)},
-    {0x13E, mbed::callback(&g_irsensor, &periodics::CIRsensor::serialCallbackIRSENSORCommand)},
-    //  {"distanceSensorRight", mbed::callback(&g_distanceSensorRight, &periodics::CDistancesensorRight::serialCallbackDISTANCERIGHTCommand)},
-    {0x132, mbed::callback(&g_resourceMonitor, &periodics::CResourcemonitor::serialCallbackRESMONCommand)}};
+    {0x10A, mbed::callback(&g_robotstatemachine, &brain::CRobotStateMachine::callbackSPEEDcommand)},
+    {0x90, mbed::callback(&g_robotstatemachine, &brain::CRobotStateMachine::callbackMAXTHROTTLEcommand)},
+    {0x92, mbed::callback(&g_robotstatemachine, &brain::CRobotStateMachine::callbackMINTHROTTLEcommand)},
+    {0x91, mbed::callback(&g_robotstatemachine, &brain::CRobotStateMachine::callbackCONFTHROTTLEcommand)},
+    {0x10F, mbed::callback(&g_robotstatemachine, &brain::CRobotStateMachine::callbackSTEERcommand)},
+    {0x105, mbed::callback(&g_robotstatemachine, &brain::CRobotStateMachine::callbackBRAKEcommand)},
+    {0x114, mbed::callback(&g_robotstatemachine, &brain::CRobotStateMachine::callbackVCDcommand)},
+    {0x137, mbed::callback(&g_imu, &periodics::CImu::callbackIMUcommand)},
+    {0x100, mbed::callback(&g_klmanager, &brain::CKlmanager::callbackKLCommand)},
+    {0x13E, mbed::callback(&g_irsensor, &periodics::CIRsensor::callbackIRSENSORCommand)},
+    {0x13C, mbed::callback(&g_distanceSensorFront, &periodics::CDistancesensorFront::callbackDISTANCEFRONTCommand)},
+    {0x13D, mbed::callback(&g_distanceSensorRight, &periodics::CDistancesensorRight::callbackDISTANCERIGHTCommand)},
+    {0x132, mbed::callback(&g_resourceMonitor, &periodics::CResourcemonitor::callbackRESOURCEMONCommand)}};
 
 drivers::CCanMask g_canMon(can, g_canMonitorSubscribers, PC_0);
 
@@ -98,10 +98,8 @@ utils::CTask *g_taskList[] = {
     &g_canMon,
 
     &g_irsensor,
-    //  &g_distanceSensorRight,
+    &g_distanceSensorRight,
     &g_distanceSensorFront
-
-    // USER NEW PERIODICS END
 };
 
 // Create the task manager, which applies periodically the tasks, miming a parallelism. It needs the list of task and the time base in seconds.
@@ -116,11 +114,7 @@ utils::CTaskManager g_taskManager(g_taskList, sizeof(g_taskList) / sizeof(utils:
 uint8_t setup()
 {
     can.frequency(500000);
-    // g_rpi.format(
-    //     /* bits */ 8,
-    //     /* parity */ SerialBase::None,
-    //     /* stop bit */ 1
-    // );
+
     printf("\r\n\r\n");
     printf("#################\r\n");
     printf("#               #\r\n");
