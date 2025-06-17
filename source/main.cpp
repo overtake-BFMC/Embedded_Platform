@@ -57,7 +57,7 @@ periodics::CImu g_imu(g_baseTick * 150, can, I2C_SDA, I2C_SCL);
 drivers::CSpeedingMotor g_speedingDriver(D3, -500, 500); // speed in cm/s
 
 // PIN for angle in servo degrees, inferior and superior limit
-drivers::CSteeringMotor g_steeringDriver(D4, -270, 270);
+drivers::CSteeringMotor g_steeringDriver(PA_0, -270, 270);
 
 // Create the motion controller, which controls the robot states and the robot moves based on the transmitted command over the serial interface.
 brain::CRobotStateMachine g_robotstatemachine(g_baseTick * 50, can, g_steeringDriver, g_speedingDriver);
