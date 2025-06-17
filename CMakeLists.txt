@@ -17,6 +17,7 @@ file(GLOB_RECURSE MY_SOURCE_FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/source/main.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/source/brain/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/source/drivers/*.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/source/drivers/*.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/source/periodics/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/source/utils/*.cpp"
 )

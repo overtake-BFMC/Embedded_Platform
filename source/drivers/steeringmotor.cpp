@@ -52,7 +52,7 @@ namespace drivers
         // uint16_t off_pulsewidth = 1000;
         //  Set the ms_period on the pwm_pin
         m_pwm_pin.period_ms(ms_period);
-        // m_pwm_pin.pulsewidth_us(off_pulsewidth);
+        m_pwm_pin.pulsewidth_us(1000);
         ThisThread::sleep_for(chrono::milliseconds(10));
         // Set position to zero
         m_pwm_pin.pulsewidth_us(zero_default);

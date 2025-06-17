@@ -30,8 +30,6 @@
 
 /* The mbed library */
 #include <mbed.h>
-//#include "stm32f4xx_hal.h"
-//#include "stm32f4xx_hal_tim.h"
 
 #include <drivers/mcp2515.hpp>
 // Header file for the microseconds functionality
@@ -64,7 +62,8 @@
 #include <drivers/canmask.hpp>
 /* Header file for the Irsensor functionality */
 #include <periodics/irsensor.hpp>
-/* Header file for the Ledcontroller functionality */
-#include <periodics/ledcontroller.hpp>
 
+#include "drivers/TIMDMADriver.h"
 
+/* Header file for the Ws2812 functionality */
+#include <periodics/ws2812.hpp>

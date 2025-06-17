@@ -33,20 +33,8 @@
 
 #define dummy_value 15
 
-extern "C" void MX_TIM3_Init();
-extern TIM_HandleTypeDef htim3;
-
 UnbufferedSerial g_rpi(USBTX, USBRX, 115200);
 
-// extern "C" void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim)
-// {
-//     if (htim->Instance == TIM1 && htim->Channel == HAL_TIM_ACTIVE_CHANNEL_3)
-//     {
-//         HAL_TIM_PWM_Stop_DMA(htim, TIM_CHANNEL_3);
-//         printf("PWM DMA stopped\n\r");
-//         // Optional: set flag or notify your system that the LED update is done
-//     }
-// }
 
 
 SPI spi(PB_15, PB_14, PB_13); // MOSI, MISO, SCK
@@ -82,7 +70,9 @@ periodics::CDistancesensorRight g_distanceSensorRight(g_baseTick * 200, PH_1, PH
 
 periodics::CIRsensor g_irsensor(g_baseTick * 50, PB_2, can);
 
-//periodics::CLedController g_ledController(g_baseTick * 5000); //PC8
+
+periodics::CWs2812 g_ws2812( g_baseTick*200 );
+
 
 brain::CKlmanager g_klmanager(g_alerts, g_imu, g_robotstatemachine, g_resourceMonitor, g_distanceSensorFront, g_irsensor, g_distanceSensorRight);
 
@@ -98,7 +88,7 @@ drivers::CCanMask::canSubscriberMap g_canMonitorSubscribers = {
     {0x137, mbed::callback(&g_imu, &periodics::CImu::callbackIMUcommand)},
     {0x100, mbed::callback(&g_klmanager, &brain::CKlmanager::callbackKLCommand)},
     {0x13E, mbed::callback(&g_irsensor, &periodics::CIRsensor::callbackIRSENSORCommand)},
-    //{0x140, mbed::callback(&g_ledController, &periodics::CLedController::callbackLEDCONTROLLERCommand)},
+    {0x140, mbed::callback(&g_ws2812, &periodics::CWs2812::callbackFILLLEDCommand)},
     {0x13C, mbed::callback(&g_distanceSensorFront, &periodics::CDistancesensorFront::callbackDISTANCEFRONTCommand)},
     //{0x13D, mbed::callback(&g_distanceSensorRight, &periodics::CDistancesensorRight::callbackDISTANCERIGHTCommand)},
     {0x132, mbed::callback(&g_resourceMonitor, &periodics::CResourcemonitor::callbackRESOURCEMONCommand)}};
@@ -118,7 +108,7 @@ utils::CTask *g_taskList[] = {
     &g_irsensor,
     //&g_distanceSensorRight,
     &g_distanceSensorFront,
-   // &g_ledController
+    &g_ws2812
 };
 
 // Create the task manager, which applies periodically the tasks, miming a parallelism. It needs the list of task and the time base in seconds.
@@ -132,10 +122,10 @@ utils::CTaskManager g_taskManager(g_taskList, sizeof(g_taskList) / sizeof(utils:
 
 uint8_t setup()
 {
+    MX_DMA_Init();
+    MX_TIM3_Init();
     can.frequency(500000);
-    //HAL_Init();
-   // MX_TIM3_Init();
-   // HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
+    
 
     printf("\r\n\r\n");
     printf("#################\r\n");

@@ -40,5 +40,6 @@ bool bool_globalsV_ShuttedDown = false;
 bool bool_globalsV_distanceFront_isActive = false;
 bool bool_globalsV_distanceRight_isActive = false;
 bool bool_globalsV_irsensor_isActive = false;
+volatile bool bool_global_dmaPulse_isActive = false;
 //TIM_HandleTypeDef htim1;
 //DMA_HandleTypeDef hdma_tim1_ch3;
