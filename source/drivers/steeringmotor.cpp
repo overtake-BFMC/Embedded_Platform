@@ -190,12 +190,12 @@ namespace drivers
         if (f_angle <= table[0].returnSteer)
         {
             m_pwm_pin.pulsewidth_us(table[0].pwm);
-            return table[0].returnSteer;
+            return turnSign ? table[0].returnSteer : -table[0].returnSteer;
         }
         if (f_angle >= table[high].returnSteer)
         {
             m_pwm_pin.pulsewidth_us(table[high].pwm);
-            return table[high].returnSteer;
+            return turnSign ? table[high].returnSteer : -table[high].returnSteer;
         }
 
         while (low <= high)
@@ -204,7 +204,10 @@ namespace drivers
             int midDeg = table[mid].returnSteer;
 
             if (midDeg == f_angle)
-                return table[mid].pwm;
+            {
+                m_pwm_pin.pulsewidth_us(table[mid].pwm);
+                return turnSign ? table[mid].returnSteer : -table[mid].returnSteer;
+            }
             else if (midDeg < f_angle)
                 low = mid + 1;
             else

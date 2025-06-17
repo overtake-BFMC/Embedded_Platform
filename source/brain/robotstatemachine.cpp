@@ -109,6 +109,7 @@ namespace brain
         if (m_steerActivate)
         {
             int returnSteer = m_steeringControl.setAngle(m_steering); // control the steering angle
+            printf("return speed %d\n\r", returnSteer );
 
             if (m_steering > 0)
                 steerSignP = true;
