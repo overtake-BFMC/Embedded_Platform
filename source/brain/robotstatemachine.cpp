@@ -49,7 +49,7 @@ namespace brain
         drivers::ISteeringCommand &f_steeringControl,
         drivers::ISpeedingCommand &f_speedingControl)
         : utils::CTask(f_period), m_canBus(f_canBus), m_steeringControl(f_steeringControl), m_speedingControl(f_speedingControl), m_ticksRun(0), m_targetTime(0), m_period((uint16_t)(f_period.count())), m_speed(0), m_steering(0), steerSignP(false), steerSignN(false)
-        ,m_speedActivate(false), m_steerActivate(false), m_brakeActivate(false), m_vcdActivate(false), m_maxThrottleActivate(false), m_minThrottleActivate(false), m_configureThrottleActivate(false)
+        ,m_speedActivate(false), m_steerActivate(false), m_brakeActivate(false), m_vcdActivate(false), m_maxThrottleActivate(false), m_minThrottleActivate(false), m_configureThrottleActivate(false), m_configureSteerActivate(false)
     {
     }
 
@@ -67,6 +67,15 @@ namespace brain
      */
     void CRobotStateMachine::_run()
     {
+        if( m_configureSteerActivate )
+        {
+            printf( "pwm steer in run method %d\n\r", m_pwmConfigureSteer);
+            m_steeringControl.configureSteering( m_pwmConfigureSteer );
+
+            m_canBus.sendMessage(0x96, m_pwmConfigureSteer, CANStandard, CANData, 4 );
+            m_configureSteerActivate = false;
+        }
+
         if(m_configureThrottleActivate)
         {
             m_speedingControl.configureThrottle(m_pwmConfigure);
@@ -99,7 +108,7 @@ namespace brain
         // Steering state
         if (m_steerActivate)
         {
-            m_steeringControl.setAngle(m_steering); // control the steering angle
+            int returnSteer = m_steeringControl.setAngle(m_steering); // control the steering angle
 
             if (m_steering > 0)
                 steerSignP = true;
@@ -117,7 +126,7 @@ namespace brain
                 m_steeringControl.setAngle(-50);
             }
 
-            m_canBus.sendMessage(0x128, m_steering, CANStandard, CANData, 4 );
+            m_canBus.sendMessage(0x128, returnSteer, CANStandard, CANData, 4 );
             m_steerActivate = false;
         }
 
@@ -151,6 +160,31 @@ namespace brain
             m_canBus.sendMessage(0x141, 1, CANStandard, CANData, 1); //1 == true
 
             m_brakeActivate = false;
+        }
+    }
+
+    void CRobotStateMachine::callbackCONFSTEERcommand(char const *a, char *b)
+    {
+
+        int pwmSteer;
+        uint32_t l_res = sscanf(a, "%d", &pwmSteer);
+
+        printf( "pwm steer in callback %d\n\r", pwmSteer );
+        if (1 == l_res)
+        {
+            if (uint8_globalsV_value_of_kl == 30)
+            {
+                m_configureSteerActivate = true;
+                m_pwmConfigureSteer = pwmSteer;
+            }
+            else
+            {
+                sprintf(b, "kl 30 is required!!");
+            }
+        }
+        else
+        {
+            sprintf(b, "syntax error");
         }
     }
 

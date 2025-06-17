@@ -80,6 +80,8 @@ namespace brain
         void callbackMINTHROTTLEcommand(char const *a, char *b);
         void callbackCONFTHROTTLEcommand(char const *a, char *b);
 
+        void callbackCONFSTEERcommand(char const *a, char *b);
+
     private:
         /* Contains the state machine, which control the lower level drivers (motor and steering) based the current state. */
         virtual void _run();
@@ -103,6 +105,9 @@ namespace brain
 
         int m_pwmConfigure;
 
+        
+        int m_pwmConfigureSteer;
+
         bool steerSignP;
         bool steerSignN;
 
@@ -113,6 +118,7 @@ namespace brain
         bool m_maxThrottleActivate;
         bool m_minThrottleActivate;
         bool m_configureThrottleActivate;
+        bool m_configureSteerActivate;
 
 
     }; // class CRobotStateMachine

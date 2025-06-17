@@ -3,7 +3,17 @@
         "*": {
             "platform.callback-nontrivial": true,
             "platform.heap-stats-enabled": true,
-            "platform.stack-stats-enabled": true
+            "platform.stack-stats-enabled": true,
+            "target.device_has_add": [
+                "PWMOUT",
+                "DMA"
+            ],
+            "target.components_add": [
+                "STM32_HAL_TIM"
+            ],
+            "target.stm32_hal_major": 1,
+            "target.stm32_hal_tim": 1,
+            "target.stm32_hal_dma": 1
         }
     }
 }

@@ -44,5 +44,7 @@ extern bool bool_globalsV_irsensor_isActive;
 extern bool bool_globalsV_distanceRight_isActive;
 extern bool bool_globalsV_resource_isActive;
 extern bool bool_globalsV_ShuttedDown;
+//extern TIM_HandleTypeDef htim3;
+//extern DMA_HandleTypeDef hdma_tim1_ch3;
 
 #endif // GLOBALSV_HPP
