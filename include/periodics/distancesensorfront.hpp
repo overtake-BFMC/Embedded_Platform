@@ -28,7 +28,7 @@ namespace periodics
             /* Destructor */
             ~CDistancesensorFront();
 
-            void callbackDISTANCEFRONTCommand(char const * a, char * b);
+            void callbackDISTANCEFRONTcommand(int64_t a, char * b);
             void DistanceMeasure();
         private:
             /* private variables & method member */

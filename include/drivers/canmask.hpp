@@ -20,7 +20,7 @@ namespace drivers
     class CCanMask : public utils::CTask
     {
         public:
-            typedef mbed::Callback<void(char const *, char *)> FCallback;
+            typedef mbed::Callback<void(int64_t, char *)> FCallback;
             typedef std::map<uint32_t,FCallback> canSubscriberMap;
             /* Constructor */
             CCanMask(

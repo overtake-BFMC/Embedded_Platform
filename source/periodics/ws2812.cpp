@@ -9,7 +9,7 @@ namespace periodics
      */
     CWs2812::CWs2812(
         std::chrono::milliseconds f_period)
-        : utils::CTask(f_period), m_fillLedActive(false)
+        : utils::CTask(f_period), m_fillLedActive(false), m_setSingleLedActive(false)
     {
         memset(LED_Data, 0, sizeof(LED_Data));
         memset(LED_Mod, 0, sizeof(LED_Mod));
@@ -124,26 +124,38 @@ namespace periodics
         startDMAHelper(pwmData, idx);
     }
 
-    void CWs2812::callbackFILLLEDCommand(char const *a, char *b)
+    void CWs2812::callbackFILLLEDcommand(int64_t a, char *b)
     {
-        uint8_t l_isActivate = 0;
-        uint8_t l_res = sscanf(a, "%hhu", &l_isActivate);
-
-        if (1 == l_res)
+        if (uint8_globalsV_value_of_kl == 30)
         {
-            if (uint8_globalsV_value_of_kl == 15 || uint8_globalsV_value_of_kl == 30)
-            {
-                m_fillLedActive = true;
-                m_fillLedBool = (l_isActivate>=1);
-            }
-            else
-            {
-                sprintf(b, "kl 15/30 is required!!");
-            }
+            m_fillLedActive = true;
+            for (size_t i = 0; i < 3; i++)
+                RGBdata[i] = (a >> i * 8) & 0xFF;
+
+            desiredBrightness = (a >> 24) & 0xFF;
         }
         else
         {
-            sprintf(b, "syntax error");
+            sprintf(b, "kl 15/30 is required!!");
+        }
+    }
+    
+    void CWs2812::callbackSETSINGLELEDcommand(int64_t a, char *b)
+    {
+        if (uint8_globalsV_value_of_kl == 30)
+        {
+            m_setSingleLedActive = true;
+
+            singleLedIndex = a & 0xFF;
+
+            for (size_t i = 1; i < 4; i++)
+                RGBdata[i-1] = (a >> i * 8) & 0xFF;
+
+            desiredBrightness = (a >> 32) & 0xFF;
+        }
+        else
+        {
+            sprintf(b, "kl 15/30 is required!!");
         }
     }
 
@@ -152,15 +164,20 @@ namespace periodics
     {
         if (m_fillLedActive)
         {
-            if( m_fillLedBool )
-                fillLED(255,255,255,45);
-            else
-                fillLED(0,0,0,0);
-            
+            fillLED(RGBdata[0], RGBdata[1], RGBdata[2], desiredBrightness);
+            update();
+
             m_fillLedActive = false;
         }
 
-        update();
-    }
+        if(m_setSingleLedActive)
+        {
+            setLED( singleLedIndex, RGBdata[0], RGBdata[1], RGBdata[2], desiredBrightness );
+            update();
 
+            m_setSingleLedActive = false;
+        }
+
+        
+    }
 }; // namespace periodics

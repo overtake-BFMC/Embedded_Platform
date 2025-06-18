@@ -20,27 +20,19 @@ namespace periodics
     CResourcemonitor::~CResourcemonitor() {
     };
 
-    void CResourcemonitor::callbackRESOURCEMONCommand(char const *a, char *b)
+    void CResourcemonitor::callbackRESOURCEMONcommand(int64_t a, char *b)
     {
-        uint8_t l_isActivate = 0;
-        uint8_t l_res = sscanf(a, "%hhu", &l_isActivate);
+        uint8_t l_isActivate = a;
 
-        if (1 == l_res)
+        if (uint8_globalsV_value_of_kl == 15 || uint8_globalsV_value_of_kl == 30)
         {
-            if (uint8_globalsV_value_of_kl == 15 || uint8_globalsV_value_of_kl == 30)
-            {
-                m_isActive = (l_isActivate >= 1);
-                bool_globalsV_resource_isActive = (l_isActivate >= 1);
-                sprintf(b, "1");
-            }
-            else
-            {
-                sprintf(b, "kl 15/30 is required!!");
-            }
+            m_isActive = (l_isActivate >= 1);
+            bool_globalsV_resource_isActive = (l_isActivate >= 1);
+            sprintf(b, "1");
         }
         else
         {
-            sprintf(b, "syntax error");
+            sprintf(b, "kl 15/30 is required!!");
         }
     }
 

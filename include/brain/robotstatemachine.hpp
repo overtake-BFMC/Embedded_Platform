@@ -68,19 +68,19 @@ namespace brain
         /* Destructor */
         ~CRobotStateMachine();
         /* Serial callback method for Speed */
-        void callbackSPEEDcommand(char const *a, char *b);
+        void callbackSPEEDcommand(int64_t a, char *b);
         /* ccallback method for Steering */
-        void callbackSTEERcommand(char const *a, char *b);
+        void callbackSTEERcommand(int64_t a, char *b);
         /* ccallback method for braking */
-        void callbackBRAKEcommand(char const *a, char *b);
+        void callbackBRAKEcommand(int64_t a, char *b);
         /* ccallback method for vcd */
-        void callbackVCDcommand(char const *a, char *response);
+        void callbackVCDcommand(int64_t a, char *response);
 
-        void callbackMAXTHROTTLEcommand(char const *a, char *b);
-        void callbackMINTHROTTLEcommand(char const *a, char *b);
-        void callbackCONFTHROTTLEcommand(char const *a, char *b);
+        void callbackMAXTHROTTLEcommand(int64_t a, char *b);
+        void callbackMINTHROTTLEcommand(int64_t a, char *b);
+        void callbackCONFTHROTTLEcommand(int64_t a, char *b);
 
-        void callbackCONFSTEERcommand(char const *a, char *b);
+        void callbackCONFSTEERcommand(int64_t a, char *b);
 
     private:
         /* Contains the state machine, which control the lower level drivers (motor and steering) based the current state. */

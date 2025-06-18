@@ -28,7 +28,7 @@ namespace periodics
             /* Destructor */
             ~CResourcemonitor();
 
-            void callbackRESOURCEMONCommand(char const * a, char * b);
+            void callbackRESOURCEMONcommand(int64_t a, char * b);
 
         private:
             /* private variables & method member */

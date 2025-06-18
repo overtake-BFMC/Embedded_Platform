@@ -66,15 +66,15 @@ periodics::CResourcemonitor g_resourceMonitor(g_baseTick * 5000, can);
 
 periodics::CDistancesensorFront g_distanceSensorFront(g_baseTick * 200, D8, D7, can); // d8 trigger d7 echo
 
-periodics::CDistancesensorRight g_distanceSensorRight(g_baseTick * 200, PH_1, PH_0, can);
+periodics::CDistancesensorRight g_distanceSensorRight(g_baseTick * 200, PC_3, PC_2, can); // pc3 trigger pc2 echo
 
 periodics::CIRsensor g_irsensor(g_baseTick * 50, PB_2, can);
 
 
-periodics::CWs2812 g_ws2812( g_baseTick*200 );
+periodics::CWs2812 g_ws2812( g_baseTick*500 );
 
 
-brain::CKlmanager g_klmanager(g_alerts, g_imu, g_robotstatemachine, g_resourceMonitor, g_distanceSensorFront, g_irsensor, g_distanceSensorRight);
+brain::CKlmanager g_klmanager(g_alerts, g_imu, g_robotstatemachine, g_resourceMonitor, g_distanceSensorFront, g_irsensor , g_distanceSensorRight);
 
 drivers::CCanMask::canSubscriberMap g_canMonitorSubscribers = {
     {0x10A, mbed::callback(&g_robotstatemachine, &brain::CRobotStateMachine::callbackSPEEDcommand)},
@@ -84,14 +84,16 @@ drivers::CCanMask::canSubscriberMap g_canMonitorSubscribers = {
     {0x93, mbed::callback(&g_robotstatemachine, &brain::CRobotStateMachine::callbackCONFSTEERcommand)},
     {0x10F, mbed::callback(&g_robotstatemachine, &brain::CRobotStateMachine::callbackSTEERcommand)},
     {0x105, mbed::callback(&g_robotstatemachine, &brain::CRobotStateMachine::callbackBRAKEcommand)},
-    {0x114, mbed::callback(&g_robotstatemachine, &brain::CRobotStateMachine::callbackVCDcommand)},
+    {0x114, mbed::callback(&g_robotstatemachine, &brain::CRobotStateMachine::callbackVCDcommand)}, //
     {0x137, mbed::callback(&g_imu, &periodics::CImu::callbackIMUcommand)},
-    {0x100, mbed::callback(&g_klmanager, &brain::CKlmanager::callbackKLCommand)},
-    {0x13E, mbed::callback(&g_irsensor, &periodics::CIRsensor::callbackIRSENSORCommand)},
-    {0x140, mbed::callback(&g_ws2812, &periodics::CWs2812::callbackFILLLEDCommand)},
-    {0x13C, mbed::callback(&g_distanceSensorFront, &periodics::CDistancesensorFront::callbackDISTANCEFRONTCommand)},
-    //{0x13D, mbed::callback(&g_distanceSensorRight, &periodics::CDistancesensorRight::callbackDISTANCERIGHTCommand)},
-    {0x132, mbed::callback(&g_resourceMonitor, &periodics::CResourcemonitor::callbackRESOURCEMONCommand)}};
+    {0x100, mbed::callback(&g_klmanager, &brain::CKlmanager::callbackKLcommand)},
+    {0x13E, mbed::callback(&g_irsensor, &periodics::CIRsensor::callbackIRSENSORcommand)},
+    {0x140, mbed::callback(&g_ws2812, &periodics::CWs2812::callbackFILLLEDcommand)},
+    {0x141, mbed::callback(&g_ws2812, &periodics::CWs2812::callbackSETSINGLELEDcommand)},
+    {0x13C, mbed::callback(&g_distanceSensorFront, &periodics::CDistancesensorFront::callbackDISTANCEFRONTcommand)},
+    {0x13D, mbed::callback(&g_distanceSensorRight, &periodics::CDistancesensorRight::callbackDISTANCERIGHTcommand)},
+    {0x132, mbed::callback(&g_resourceMonitor, &periodics::CResourcemonitor::callbackRESOURCEMONcommand)}
+};
 
 drivers::CCanMask g_canMon(can, g_canMonitorSubscribers, PC_0);
 
@@ -106,7 +108,7 @@ utils::CTask *g_taskList[] = {
     &g_canMon,
 
     &g_irsensor,
-    //&g_distanceSensorRight,
+    &g_distanceSensorRight,
     &g_distanceSensorFront,
     &g_ws2812
 };

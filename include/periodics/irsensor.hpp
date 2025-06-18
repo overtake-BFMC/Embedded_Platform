@@ -27,7 +27,7 @@ namespace periodics
             /* Destructor */
             ~CIRsensor();
 
-            void callbackIRSENSORCommand(char const * a, char * b);
+            void callbackIRSENSORcommand(int64_t a, char * b);
         private:
             /* private variables & method member */
             drivers::CCanBusMonitor& m_canBus;

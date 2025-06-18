@@ -48,8 +48,7 @@ namespace brain
         drivers::CCanBusMonitor &f_canBus,
         drivers::ISteeringCommand &f_steeringControl,
         drivers::ISpeedingCommand &f_speedingControl)
-        : utils::CTask(f_period), m_canBus(f_canBus), m_steeringControl(f_steeringControl), m_speedingControl(f_speedingControl), m_ticksRun(0), m_targetTime(0), m_period((uint16_t)(f_period.count())), m_speed(0), m_steering(0), steerSignP(false), steerSignN(false)
-        ,m_speedActivate(false), m_steerActivate(false), m_brakeActivate(false), m_vcdActivate(false), m_maxThrottleActivate(false), m_minThrottleActivate(false), m_configureThrottleActivate(false), m_configureSteerActivate(false)
+        : utils::CTask(f_period), m_canBus(f_canBus), m_steeringControl(f_steeringControl), m_speedingControl(f_speedingControl), m_ticksRun(0), m_targetTime(0), m_period((uint16_t)(f_period.count())), m_speed(0), m_steering(0), steerSignP(false), steerSignN(false), m_speedActivate(false), m_steerActivate(false), m_brakeActivate(false), m_vcdActivate(false), m_maxThrottleActivate(false), m_minThrottleActivate(false), m_configureThrottleActivate(false), m_configureSteerActivate(false)
     {
     }
 
@@ -67,30 +66,30 @@ namespace brain
      */
     void CRobotStateMachine::_run()
     {
-        if( m_configureSteerActivate )
+        if (m_configureSteerActivate)
         {
-            printf( "pwm steer in run method %d\n\r", m_pwmConfigureSteer);
-            m_steeringControl.configureSteering( m_pwmConfigureSteer );
+            printf("pwm steer in run method %d\n\r", m_pwmConfigureSteer);
+            m_steeringControl.configureSteering(m_pwmConfigureSteer);
 
-            m_canBus.sendMessage(0x96, m_pwmConfigureSteer, CANStandard, CANData, 4 );
+            m_canBus.sendMessage(0x96, m_pwmConfigureSteer, CANStandard, CANData, 4);
             m_configureSteerActivate = false;
         }
 
-        if(m_configureThrottleActivate)
+        if (m_configureThrottleActivate)
         {
             m_speedingControl.configureThrottle(m_pwmConfigure);
 
-            m_canBus.sendMessage(0x95, m_pwmConfigure, CANStandard, CANData, 4 );
+            m_canBus.sendMessage(0x95, m_pwmConfigure, CANStandard, CANData, 4);
             m_configureThrottleActivate = false;
         }
-        
-        if(m_maxThrottleActivate)
+
+        if (m_maxThrottleActivate)
         {
             m_speedingControl.maxThrottle();
             m_maxThrottleActivate = false;
         }
 
-        if(m_minThrottleActivate)
+        if (m_minThrottleActivate)
         {
             m_speedingControl.minThrottle();
             m_minThrottleActivate = false;
@@ -101,7 +100,7 @@ namespace brain
         {
             int returnSpeed = m_speedingControl.setSpeed(m_speed); // Set the reference speed
 
-            m_canBus.sendMessage(0x123, returnSpeed, CANStandard, CANData, 4 );
+            m_canBus.sendMessage(0x123, returnSpeed, CANStandard, CANData, 4);
             m_speedActivate = false;
         }
 
@@ -109,7 +108,7 @@ namespace brain
         if (m_steerActivate)
         {
             int returnSteer = m_steeringControl.setAngle(m_steering); // control the steering angle
-            printf("return speed %d\n\r", returnSteer );
+            printf("return steer %d\n\r", returnSteer);
 
             if (m_steering > 0)
                 steerSignP = true;
@@ -127,7 +126,7 @@ namespace brain
                 m_steeringControl.setAngle(-50);
             }
 
-            m_canBus.sendMessage(0x128, returnSteer, CANStandard, CANData, 4 );
+            m_canBus.sendMessage(0x128, returnSteer, CANStandard, CANData, 4);
             m_steerActivate = false;
         }
 
@@ -143,7 +142,7 @@ namespace brain
 
                 m_vcdActivate = false;
 
-                m_canBus.sendMessage(0x146, m_ticksRun, CANStandard, CANData, 2 );
+                m_canBus.sendMessage(0x146, m_ticksRun, CANStandard, CANData, 2);
             }
             else
             {
@@ -158,64 +157,51 @@ namespace brain
             m_steeringControl.setAngle(m_steering); // control the steering angle
             m_speedingControl.setBrake();
 
-            m_canBus.sendMessage(0x141, 1, CANStandard, CANData, 1); //1 == true
+            m_canBus.sendMessage(0x141, 1, CANStandard, CANData, 1); // 1 == true
 
             m_brakeActivate = false;
         }
     }
 
-    void CRobotStateMachine::callbackCONFSTEERcommand(char const *a, char *b)
+    void CRobotStateMachine::callbackCONFSTEERcommand(int64_t a, char *b)
     {
 
-        int pwmSteer;
-        uint32_t l_res = sscanf(a, "%d", &pwmSteer);
+        int pwmSteer = a;
+        // uint32_t l_res = sscanf(a, "%d", &pwmSteer);
 
-        printf( "pwm steer in callback %d\n\r", pwmSteer );
-        if (1 == l_res)
+        //printf("pwm steer in callback %d\n\r", pwmSteer);
+
+        if (uint8_globalsV_value_of_kl == 30)
         {
-            if (uint8_globalsV_value_of_kl == 30)
-            {
-                m_configureSteerActivate = true;
-                m_pwmConfigureSteer = pwmSteer;
-            }
-            else
-            {
-                sprintf(b, "kl 30 is required!!");
-            }
+            m_configureSteerActivate = true;
+            m_pwmConfigureSteer = pwmSteer;
         }
         else
         {
-            sprintf(b, "syntax error");
+            sprintf(b, "kl 30 is required!!");
         }
     }
 
-    void CRobotStateMachine::callbackCONFTHROTTLEcommand(char const *a, char *b)
+    void CRobotStateMachine::callbackCONFTHROTTLEcommand(int64_t a, char *b)
     {
-        int pwm;
-        uint32_t l_res = sscanf(a, "%d", &pwm);
-        if (1 == l_res)
+        int pwm = a;
+
+        if (uint8_globalsV_value_of_kl == 30)
         {
-            if (uint8_globalsV_value_of_kl == 30)
-            {
-                m_configureThrottleActivate = true;
-                m_pwmConfigure = pwm;
-            }
-            else
-            {
-                sprintf(b, "kl 30 is required!!");
-            }
+            m_configureThrottleActivate = true;
+            m_pwmConfigure = pwm;
         }
         else
         {
-            sprintf(b, "syntax error");
+            sprintf(b, "kl 30 is required!!");
         }
     }
 
-    void CRobotStateMachine::callbackMAXTHROTTLEcommand(char const *a, char *b)
+    void CRobotStateMachine::callbackMAXTHROTTLEcommand(int64_t a, char *b)
     {
-        int l_speed;
-        uint32_t l_res = sscanf(a, "%d", &l_speed);
-        if (1 == l_res)
+        bool l_res = a;
+
+        if (l_res)
         {
             if (uint8_globalsV_value_of_kl == 30)
             {
@@ -232,17 +218,15 @@ namespace brain
         }
     }
 
-    void CRobotStateMachine::callbackMINTHROTTLEcommand(char const *a, char *b)
+    void CRobotStateMachine::callbackMINTHROTTLEcommand(int64_t a, char *b)
     {
-        int l_speed;
-        uint32_t l_res = sscanf(a, "%d", &l_speed);
-        if (1 == l_res)
+        bool l_res = a;
+
+        if (l_res)
         {
             if (uint8_globalsV_value_of_kl == 30)
             {
                 m_minThrottleActivate = true;
-
-                m_speed = l_speed;
             }
             else
             {
@@ -265,33 +249,26 @@ namespace brain
      * @param b                   string to write data
      *
      */
-    void CRobotStateMachine::callbackSPEEDcommand(char const *a, char *b)
+    void CRobotStateMachine::callbackSPEEDcommand(int64_t a, char *b)
     {
-        int l_speed;
-        uint32_t l_res = sscanf(a, "%d", &l_speed);
-        if (1 == l_res)
+        int l_speed = a;
+
+        if (uint8_globalsV_value_of_kl == 30)
         {
-            if (uint8_globalsV_value_of_kl == 30)
-            {
-                if (!m_speedingControl.inRange(l_speed))
-                { // Check the received reference speed is within range
-                    sprintf(b, "The reference speed command is too high");
-                    return;
-                }
-
-                // m_state = 1;
-                m_speedActivate = true;
-
-                m_speed = l_speed;
+            if (!m_speedingControl.inRange(l_speed))
+            { // Check the received reference speed is within range
+                sprintf(b, "The reference speed command is too high");
+                return;
             }
-            else
-            {
-                sprintf(b, "kl 30 is required!!");
-            }
+
+            // m_state = 1;
+            m_speedActivate = true;
+
+            m_speed = l_speed;
         }
         else
         {
-            sprintf(b, "syntax error");
+            sprintf(b, "kl 30 is required!!");
         }
     }
 
@@ -304,65 +281,27 @@ namespace brain
      * @param b                   string to write data
      *
      */
-    void CRobotStateMachine::callbackSTEERcommand(char const *a, char *b)
+    void CRobotStateMachine::callbackSTEERcommand(int64_t a, char *b)
     {
-        int l_angle;
-        uint32_t l_res = sscanf(a, "%d", &l_angle);
-        if (1 == l_res)
-        {
-            if (uint8_globalsV_value_of_kl == 30)
-            {
-                if (!m_steeringControl.inRange(l_angle))
-                { // Check the received steering angle
-                    sprintf(b, "The steering angle command is too high");
-                    return;
-                }
+        int l_angle = a;
 
-                // m_state = 2;
-
-                m_steerActivate = true;
-
-                m_steering = l_angle;
-            }
-            else
-            {
-                sprintf(b, "kl 30 is required!!");
-            }
-        }
-        else
-        {
-            sprintf(b, "syntax error");
-        }
-    }
-
-    /** \brief  Serial callback actions for brake command
-     *
-     * This method aims to change the state of controller to brake and sets the steering angle to the received value.
-     *
-     * @param a                   string to read data
-     * @param b                   string to write data
-     *
-     */
-    void CRobotStateMachine::callbackBRAKEcommand(char const *a, char *b)
-    {
-        int l_angle;
-        uint32_t l_res = sscanf(a, "%d", &l_angle);
-        if (1 == l_res)
+        if (uint8_globalsV_value_of_kl == 30)
         {
             if (!m_steeringControl.inRange(l_angle))
-            {
+            { // Check the received steering angle
                 sprintf(b, "The steering angle command is too high");
                 return;
             }
 
-            // m_state = 3;
-            m_brakeActivate = true;
+            // m_state = 2;
+
+            m_steerActivate = true;
 
             m_steering = l_angle;
         }
         else
         {
-            sprintf(b, "syntax error");
+            sprintf(b, "kl 30 is required!!");
         }
     }
 
@@ -374,12 +313,38 @@ namespace brain
      * @param b                   string to write data
      *
      */
-    void CRobotStateMachine::callbackVCDcommand(char const *message, char *response)
+    void CRobotStateMachine::callbackBRAKEcommand(int64_t a, char *b)
+    {
+        int l_angle = a;
+
+        if (!m_steeringControl.inRange(l_angle))
+        {
+            sprintf(b, "The steering angle command is too high");
+            return;
+        }
+
+        // m_state = 3;
+        m_brakeActivate = true;
+
+        m_steering = l_angle;
+    }
+
+    /** \brief  Serial callback actions for brake command
+     *
+     * This method aims to change the state of controller to brake and sets the steering angle to the received value.
+     *
+     * @param a                   string to read data
+     * @param b                   string to write data
+     *
+     */
+    void CRobotStateMachine::callbackVCDcommand(int64_t message, char *response)
     {
         int speed, steer;
-        uint8_t time_deciseconds;
+        uint16_t time_deciseconds = (message & 0xFF) | ((message >> 8) & 0xFF);
+        speed = ((message >> 16) & 0xFF) | ((message >> 24) & 0xFF);
+        steer = ((message >> 32) & 0xFF) | ((message >> 40) & 0xFF);
 
-        uint8_t parsed = sscanf(message, "%d;%d;%hhu", &speed, &steer, &time_deciseconds);
+        // uint8_t parsed = sscanf(message, "%d;%d;%hhu", &speed, &steer, &time_deciseconds);
 
         if (uint8_globalsV_value_of_kl != 30)
         {
@@ -389,7 +354,7 @@ namespace brain
 
         m_targetTime = time_deciseconds;
 
-        if (parsed == 3 && speed <= 500 && speed >= -500 && steer <= 232 && steer >= -232)
+        if (time_deciseconds > 0 && speed <= 500 && speed >= -500 && steer <= 232 && steer >= -232)
         {
             sprintf(response, "%d;%d;%d", speed, steer, time_deciseconds);
 
@@ -397,7 +362,7 @@ namespace brain
 
             m_targetTime = time_deciseconds * scale_ds_to_ms;
 
-            //m_state = 4;
+            // m_state = 4;
             m_vcdActivate = true;
 
             m_steeringControl.setAngle(steer);
@@ -408,5 +373,4 @@ namespace brain
             sprintf(response, "something went wrong");
         }
     }
-
 }; // namespace brain

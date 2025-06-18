@@ -31,18 +31,19 @@ namespace periodics
         void setGlobalBrightness(int);
         void updateBrightness();
         void update(); 
-        void callbackFILLLEDCommand(char const *a, char *b);
+        void callbackFILLLEDcommand(int64_t a, char *b);
+        void callbackSETSINGLELEDcommand(int64_t a, char *b);
         void fillLED(int Red, int Green, int Blue, int Brightness);
 
     private:
         /* private variables & method member */
 
-        static constexpr int NUM_LEDS = 8;
+        static constexpr int NUM_LEDS = 24;
         static constexpr int PWM_PERIOD = 105;
         static constexpr uint16_t WS2812_HIGH = 70;
         static constexpr uint16_t WS2812_LOW = 35;
         static constexpr uint16_t RESET_SLOTS = 75;
-        static constexpr bool useBrightness = false;
+        static constexpr bool useBrightness = true;
 
         uint8_t LED_Data[NUM_LEDS][4];
         uint8_t LED_Mod[NUM_LEDS][4];
@@ -54,8 +55,11 @@ namespace periodics
         /** @brief Active flag  */
         //bool m_isActive;
         bool m_fillLedActive;
+        bool m_setSingleLedActive;
 
-        bool m_fillLedBool;
+        uint8_t singleLedIndex;
+        uint8_t RGBdata[3];
+        uint8_t desiredBrightness;
 
     }; // class CWs2812
 }; // namespace periodics

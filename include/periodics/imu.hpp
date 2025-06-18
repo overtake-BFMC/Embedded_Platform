@@ -70,7 +70,7 @@ namespace periodics
             /* TThe delay routine */
             static void BNO055_delay_msek(u32 msek);
             /* Serial callback implementation */
-            void callbackIMUcommand(char const * a, char * b);
+            void callbackIMUcommand(int64_t a, char * b);
         private:
             /*I2C init routine */
             virtual void I2C_routine(void);

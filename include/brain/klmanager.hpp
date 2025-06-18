@@ -66,7 +66,7 @@ namespace brain
             /* Destructor */
             ~CKlmanager();
 
-            void callbackKLCommand(const char* message, char* response);
+            void callbackKLcommand(int64_t message, char* response);
 
             uint8_t m_klvalue;
 

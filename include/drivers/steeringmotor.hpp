@@ -100,22 +100,12 @@ namespace drivers
             /** @brief Superior limit */
             const int m_sup_limit;
 
+            const uint16_t interpolationPoint[2] = {1495, 1555};
+            const uint8_t interpolationFactor[2] = {28, 14};
+
             const uint16_t min_steer = 899;
             const uint16_t max_steer = 2101;
-
-            /* convert angle degree to duty cycle for pwm signal */
-            //int conversion(int f_angle); //angle to duty cycle
-
-            /* interpolate the step value and the zero default based on the steering value */
-            //std::pair<int, int> interpolate(int steering, const int steeringValueP[], const int steeringValueN[], const int stepValues[], const int zeroDefaultValues[], int size);
-
-            // Predefined values for steering reference and interpolation
-            // All the values have a scale factor applied (*100)
-            // const int steeringValueP[3] = {0, 150, 200};
-            // const int steeringValueN[3] = {0, -150, -200};
-            // const int stepValues[3] = {1901, 1951, 2028};
-            // const int zeroDefaultValues[3] = {153441, 153820, 153610};
-
+            
             const SteerPwmPair rightSteerTable[rightTableSize] = 
             {
                 { 50, 1625},

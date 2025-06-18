@@ -71,94 +71,6 @@ namespace drivers
             m_pwm_pin.pulsewidth_us(zero_default);
     };
 
-    /**
-     * @brief Interpolates values based on steering input.
-     *
-     * This function interpolates `stepValues` and `zeroDefaultValues` based on the provided `steering` input.
-     * The interpolation is made using `steeringValueP` and `steeringValueN` as reference values.
-     *
-     * @param steering The input steering value for which the values need to be interpolated.
-     * @param steeringValueP Positive reference values for steering.
-     * @param steeringValueN Negative reference values for steering.
-     * @param stepValues Step values corresponding to steeringValueP and steeringValueN which need to be interpolated.
-     * @param zeroDefaultValues Zero default values corresponding to steeringValueP and steeringValueN for interpolation.
-     * @param size The size of the arrays.
-     * @return A pair of interpolated values: { interpolated stepValue, interpolated zeroDefaultValue }.
-     */
-    // std::pair<int, int> CSteeringMotor::interpolate(int steering, const int steeringValueP[], const int steeringValueN[], const int stepValues[], const int zeroDefaultValues[], int size)
-    // {
-    //     // If steering is within the bounds of the first positive and negative reference values
-    //     if(steering <= steeringValueP[0]){
-    //         if (steering >= steeringValueN[0])
-    //         {
-    //             return {stepValues[0], zeroDefaultValues[0]};
-    //         }
-    //         else{
-    //             for(uint8_t i=1; i<size; i++)
-    //             {
-    //                 // Find the interval of negative reference values where steering falls into
-    //                 if (steering >= steeringValueN[i])
-    //                 {
-    //                     // Calculate slopes for interpolation
-    //                     int slopeStepValue = (stepValues[i] - stepValues[i-1]) / (steeringValueN[i] - steeringValueN[i-1]);
-    //                     int slopeZeroDefault = (zeroDefaultValues[i] - zeroDefaultValues[i-1]) / (steeringValueN[i] - steeringValueN[i-1]);
-
-    //                     // Return the interpolated values
-    //                     return {stepValues[i-1] + slopeStepValue * (steering - steeringValueN[i-1]), zeroDefaultValues[i-1] + slopeZeroDefault * (steering - steeringValueN[i-1])};
-    //                 }
-    //             }
-    //         }
-    //     }
-
-    //     // Boundary conditions for positive and negative reference values
-    //     if(steering >= steeringValueP[size-1]) return {stepValues[size-1], zeroDefaultValues[size-1]};
-    //     if(steering <= steeringValueN[size-1]) return {stepValues[size-1], zeroDefaultValues[size-1]};
-
-    //     // Interpolation for values between positive reference values
-    //     for(uint8_t i=1; i<size; i++)
-    //     {
-    //         if (steering <= steeringValueP[i])
-    //         {
-    //             // Calculate slopes for interpolation
-    //             int slopeStepValue = (stepValues[i] - stepValues[i-1]) / (steeringValueP[i] - steeringValueP[i-1]);
-    //             int slopeZeroDefault = (zeroDefaultValues[i] - zeroDefaultValues[i-1]) / (steeringValueP[i] - steeringValueP[i-1]);
-
-    //             // Return the interpolated values
-    //             return {stepValues[i-1] + slopeStepValue * (steering - steeringValueP[i-1]), zeroDefaultValues[i-1] + slopeZeroDefault * (steering - steeringValueP[i-1])};
-    //         }
-    //     }
-
-    //     // Default return if no interval is found
-    //     return {-1, -1};
-    // };
-
-    /** @brief  It modifies the angle of the servo motor, which controls the steering wheels.
-     *
-     *  @param f_angle      angle degree, where the positive value means right direction and negative value the left direction.
-     */
-    // void CSteeringMotor::setAngle(int f_angle)
-    // {
-    //     std::pair<int, int> interpolationResult;
-
-    //     interpolationResult = interpolate(f_angle, steeringValueP, steeringValueN, stepValues, zeroDefaultValues, 3);
-
-    //     step_value = interpolationResult.first;
-    //     zero_default = interpolationResult.second;
-
-    //     m_pwm_pin.pulsewidth_us(conversion(f_angle));
-    // };
-
-    // /** @brief  It converts angle degree to duty cycle for pwm signal.
-    //  *
-    //  *  @param f_angle    angle degree
-    //  *  \return         duty cycle in interval [0,1]
-    //  */
-    // int CSteeringMotor::conversion(int f_angle)
-    // {
-    //     return (((step_value * f_angle)/(scaling_factor_1*scaling_factor_2)) + (zero_default/scaling_factor_2));
-    // };
-
-    //
     int CSteeringMotor::setAngle(int f_angle)
     {
         if (f_angle == 0)
@@ -170,6 +82,7 @@ namespace drivers
         const SteerPwmPair *table;
         size_t size;
         bool turnSign = false; //turning left
+
 
         if (f_angle < 0)
         {
@@ -189,8 +102,15 @@ namespace drivers
         // Handle edge cases
         if (f_angle <= table[0].returnSteer)
         {
-            m_pwm_pin.pulsewidth_us(table[0].pwm);
-            return turnSign ? table[0].returnSteer : -table[0].returnSteer;
+            int pwm;
+            if( turnSign )
+                pwm = interpolationPoint[1] + interpolationFactor[1] * (int)(f_angle/10);
+            else
+                pwm = interpolationPoint[0] - interpolationFactor[0] * (int)(f_angle/10);
+
+            m_pwm_pin.pulsewidth_us(pwm);
+            printf( "PWM STEER %d\n\r", pwm );
+            return turnSign ? f_angle : -f_angle;
         }
         if (f_angle >= table[high].returnSteer)
         {
