@@ -9,7 +9,8 @@ namespace periodics
      */
     CWs2812::CWs2812(
         std::chrono::milliseconds f_period)
-        : utils::CTask(f_period), m_fillLedActive(false), m_setSingleLedActive(false)
+        : utils::CTask(f_period), m_fillLedActive(false), m_setSingleLedActive(false),
+        m_setSideLedActive(false), m_setHalfSideLedActive(false)
     {
         memset(LED_Data, 0, sizeof(LED_Data));
         memset(LED_Mod, 0, sizeof(LED_Mod));
@@ -42,6 +43,15 @@ namespace periodics
             setLED(i, Red, Green, Blue, Brightness);
 
         for (int i = 16; i < NUM_LEDS; i++)
+            setLED(i, Red, Green, Blue, Brightness);
+    }
+
+    void CWs2812::fillHalfSideLED(int Red, int Green, int Blue, int Brightness)
+    {
+        for (int i = 0; i < 4; i++)
+            setLED(i, Red, Green, Blue, Brightness);
+
+        for (int i = 20; i < NUM_LEDS; i++)
             setLED(i, Red, Green, Blue, Brightness);
     }
 
@@ -164,6 +174,22 @@ namespace periodics
             sprintf(b, "kl 15/30 is required!!");
         }
     }
+
+    void CWs2812::callbackSETHALFSIDELEDcommand(int64_t a, char *b)
+    {
+        if (uint8_globalsV_value_of_kl == 30)
+        {
+            m_setHalfSideLedActive = true;
+            for (size_t i = 0; i < 3; i++)
+                RGBdata[i] = (a >> i * 8) & 0xFF;
+
+            desiredBrightness = (a >> 24) & 0xFF;
+        }
+        else
+        {
+            sprintf(b, "kl 15/30 is required!!");
+        }
+    }
     
     void CWs2812::callbackSETSINGLELEDcommand(int64_t a, char *b)
     {
@@ -201,6 +227,14 @@ namespace periodics
             update();
 
             m_setSideLedActive = false;
+        }
+
+        if(m_setHalfSideLedActive)
+        {
+            fillHalfSideLED(RGBdata[0], RGBdata[1], RGBdata[2], desiredBrightness);
+            update();
+
+            m_setHalfSideLedActive = false;
         }
 
         if(m_setSingleLedActive)

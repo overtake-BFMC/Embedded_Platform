@@ -34,8 +34,10 @@ namespace periodics
         void callbackFILLLEDcommand(int64_t a, char *b);
         void callbackSETSINGLELEDcommand(int64_t a, char *b);
         void callbackSETSIDELEDcommand(int64_t a, char *b);
+        void callbackSETHALFSIDELEDcommand(int64_t a, char *b);
         void fillLED(int Red, int Green, int Blue, int Brightness);
         void fillSideLED(int Red, int Green, int Blue, int Brightness);
+        void fillHalfSideLED(int Red, int Green, int Blue, int Brightness);
 
     private:
         /* private variables & method member */
@@ -59,6 +61,7 @@ namespace periodics
         bool m_fillLedActive;
         bool m_setSideLedActive;
         bool m_setSingleLedActive;
+        bool m_setHalfSideLedActive;
 
         uint8_t singleLedIndex;
         uint8_t RGBdata[3];

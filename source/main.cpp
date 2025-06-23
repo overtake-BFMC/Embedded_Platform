@@ -91,6 +91,7 @@ drivers::CCanMask::canSubscriberMap g_canMonitorSubscribers = {
     {0x140, mbed::callback(&g_ws2812, &periodics::CWs2812::callbackFILLLEDcommand)},
     {0x141, mbed::callback(&g_ws2812, &periodics::CWs2812::callbackSETSINGLELEDcommand)},
     {0x142, mbed::callback(&g_ws2812, &periodics::CWs2812::callbackSETSIDELEDcommand)},
+    {0x143, mbed::callback(&g_ws2812, &periodics::CWs2812::callbackSETHALFSIDELEDcommand)},
     {0x13C, mbed::callback(&g_distanceSensorFront, &periodics::CDistancesensorFront::callbackDISTANCEFRONTcommand)},
     {0x13D, mbed::callback(&g_distanceSensorRight, &periodics::CDistancesensorRight::callbackDISTANCERIGHTcommand)},
     {0x132, mbed::callback(&g_resourceMonitor, &periodics::CResourcemonitor::callbackRESOURCEMONcommand)}
