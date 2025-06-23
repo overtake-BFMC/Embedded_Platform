@@ -118,12 +118,12 @@ namespace brain
             if (m_steering == 0 && steerSignN)
             {
                 steerSignN = false;
-                m_steeringControl.setAngle(30);
+                m_steeringControl.setAngle(20);
             }
             if (m_steering == 0 && steerSignP)
             {
                 steerSignP = false;
-                m_steeringControl.setAngle(-50);
+                m_steeringControl.setAngle(-20);
             }
 
             m_canBus.sendMessage(0x128, returnSteer, CANStandard, CANData, 4);
