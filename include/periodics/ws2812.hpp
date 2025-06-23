@@ -33,15 +33,17 @@ namespace periodics
         void update(); 
         void callbackFILLLEDcommand(int64_t a, char *b);
         void callbackSETSINGLELEDcommand(int64_t a, char *b);
+        void callbackSETSIDELEDcommand(int64_t a, char *b);
         void fillLED(int Red, int Green, int Blue, int Brightness);
+        void fillSideLED(int Red, int Green, int Blue, int Brightness);
 
     private:
         /* private variables & method member */
 
         static constexpr int NUM_LEDS = 24;
         static constexpr int PWM_PERIOD = 105;
-        static constexpr uint16_t WS2812_HIGH = 70;
-        static constexpr uint16_t WS2812_LOW = 35;
+        static constexpr uint16_t WS2812_HIGH = 67; //70
+        static constexpr uint16_t WS2812_LOW = 34; //35
         static constexpr uint16_t RESET_SLOTS = 75;
         static constexpr bool useBrightness = true;
 
@@ -55,6 +57,7 @@ namespace periodics
         /** @brief Active flag  */
         //bool m_isActive;
         bool m_fillLedActive;
+        bool m_setSideLedActive;
         bool m_setSingleLedActive;
 
         uint8_t singleLedIndex;

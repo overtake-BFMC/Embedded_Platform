@@ -36,6 +36,15 @@ namespace periodics
             setLED(i, Red, Green, Blue, Brightness);
     }
 
+    void CWs2812::fillSideLED(int Red, int Green, int Blue, int Brightness)
+    {
+        for (int i = 0; i < 8; i++)
+            setLED(i, Red, Green, Blue, Brightness);
+
+        for (int i = 16; i < NUM_LEDS; i++)
+            setLED(i, Red, Green, Blue, Brightness);
+    }
+
     void CWs2812::setGlobalBrightness(int brightness)
     {
         if (useBrightness)
@@ -139,6 +148,22 @@ namespace periodics
             sprintf(b, "kl 15/30 is required!!");
         }
     }
+
+    void CWs2812::callbackSETSIDELEDcommand(int64_t a, char *b)
+    {
+        if (uint8_globalsV_value_of_kl == 30)
+        {
+            m_setSideLedActive = true;
+            for (size_t i = 0; i < 3; i++)
+                RGBdata[i] = (a >> i * 8) & 0xFF;
+
+            desiredBrightness = (a >> 24) & 0xFF;
+        }
+        else
+        {
+            sprintf(b, "kl 15/30 is required!!");
+        }
+    }
     
     void CWs2812::callbackSETSINGLELEDcommand(int64_t a, char *b)
     {
@@ -168,6 +193,14 @@ namespace periodics
             update();
 
             m_fillLedActive = false;
+        }
+
+        if(m_setSideLedActive)
+        {
+            fillSideLED(RGBdata[0], RGBdata[1], RGBdata[2], desiredBrightness);
+            update();
+
+            m_setSideLedActive = false;
         }
 
         if(m_setSingleLedActive)
