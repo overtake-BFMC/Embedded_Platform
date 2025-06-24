@@ -56,7 +56,7 @@ namespace brain
             /* Construnctor */
             CKlmanager(
                 periodics::CAlerts& f_alerts,
-                periodics::CImu& f_imu,
+                //periodics::CImu& f_imu,
                 brain::CRobotStateMachine& f_robotStateMachine,
                 periodics::CResourcemonitor& f_resourceM,
                 periodics::CDistancesensorFront& f_distanceF,
@@ -73,7 +73,7 @@ namespace brain
         private:
             /* private variables & method member */
             periodics::CAlerts& m_alerts;
-            periodics::CImu& m_imu;
+            //periodics::CImu& m_imu;
             brain::CRobotStateMachine& m_robotStateMachine;
             periodics::CResourcemonitor& m_resourceM;
             periodics::CDistancesensorFront& m_distanceF;

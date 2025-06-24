@@ -41,7 +41,7 @@ namespace brain
     */
     CKlmanager::CKlmanager(
         periodics::CAlerts& f_alerts,
-        periodics::CImu& f_imu,
+        //periodics::CImu& f_imu,
         brain::CRobotStateMachine& f_robotStateMachine,
         periodics::CResourcemonitor& f_resourceM,
         periodics::CDistancesensorFront& f_distanceF,
@@ -50,7 +50,7 @@ namespace brain
     )
     : m_klvalue(0)
     , m_alerts(f_alerts)
-    , m_imu(f_imu)
+    //, m_imu(f_imu)
     , m_robotStateMachine(f_robotStateMachine)
     , m_resourceM(f_resourceM)
     , m_distanceF(f_distanceF)
@@ -83,7 +83,7 @@ namespace brain
                 if(l_keyValue == 0 && (uint8_globalsV_value_of_kl!=0))
                 {
                     sprintf(b,"%d",l_keyValue);
-                    m_imu.callbackIMUcommand(0, response);
+                    //m_imu.callbackIMUcommand(0, response);
                     ThisThread::sleep_for(chrono::milliseconds(50));
                     m_distanceF.callbackDISTANCEFRONTcommand(0, response);
                     ThisThread::sleep_for(chrono::milliseconds(50));
@@ -102,7 +102,7 @@ namespace brain
                     sprintf(b,"%d",l_keyValue);
                     //m_robotStateMachine.callbackVCDcommand("0;0;2", response);
                     uint8_globalsV_value_of_kl = 15;
-                    if(!bool_globalsV_imu_isActive) m_imu.callbackIMUcommand(1, response);
+                    //if(!bool_globalsV_imu_isActive) m_imu.callbackIMUcommand(1, response);
                     if(!bool_globalsV_resource_isActive) m_resourceM.callbackRESOURCEMONcommand(1, response);
                     if(!bool_globalsV_distanceFront_isActive) m_distanceF.callbackDISTANCEFRONTcommand(1, response);
                     if(!bool_globalsV_irsensor_isActive) m_irSensor.callbackIRSENSORcommand(1, response);

@@ -51,7 +51,7 @@ periodics::CBlinker g_blinker(g_baseTick * 500, LED1);
 periodics::CAlerts g_alerts(g_baseTick * 5000);
 
 // It's a task for sending periodically the IMU values
-periodics::CImu g_imu(g_baseTick * 150, can, I2C_SDA, I2C_SCL);
+//periodics::CImu g_imu(g_baseTick * 150, can, I2C_SDA, I2C_SCL);
 
 // PIN for a motor speed in ms, inferior and superior limit
 drivers::CSpeedingMotor g_speedingDriver(D3, -500, 500); // speed in cm/s
@@ -74,7 +74,14 @@ periodics::CIRsensor g_irsensor(g_baseTick * 50, PB_2, can);
 periodics::CWs2812 g_ws2812( g_baseTick*500 );
 
 
-brain::CKlmanager g_klmanager(g_alerts, g_imu, g_robotstatemachine, g_resourceMonitor, g_distanceSensorFront, g_irsensor , g_distanceSensorRight);
+brain::CKlmanager g_klmanager(
+    g_alerts, 
+    //g_imu, 
+    g_robotstatemachine, 
+    g_resourceMonitor, 
+    g_distanceSensorFront, 
+    g_irsensor, 
+    g_distanceSensorRight);
 
 drivers::CCanMask::canSubscriberMap g_canMonitorSubscribers = {
     {0x10A, mbed::callback(&g_robotstatemachine, &brain::CRobotStateMachine::callbackSPEEDcommand)},
@@ -85,7 +92,7 @@ drivers::CCanMask::canSubscriberMap g_canMonitorSubscribers = {
     {0x10F, mbed::callback(&g_robotstatemachine, &brain::CRobotStateMachine::callbackSTEERcommand)},
     {0x105, mbed::callback(&g_robotstatemachine, &brain::CRobotStateMachine::callbackBRAKEcommand)},
     {0x114, mbed::callback(&g_robotstatemachine, &brain::CRobotStateMachine::callbackVCDcommand)}, //
-    {0x137, mbed::callback(&g_imu, &periodics::CImu::callbackIMUcommand)},
+    //{0x137, mbed::callback(&g_imu, &periodics::CImu::callbackIMUcommand)},
     {0x100, mbed::callback(&g_klmanager, &brain::CKlmanager::callbackKLcommand)},
     {0x13E, mbed::callback(&g_irsensor, &periodics::CIRsensor::callbackIRSENSORcommand)},
     {0x140, mbed::callback(&g_ws2812, &periodics::CWs2812::callbackFILLLEDcommand)},
@@ -103,7 +110,7 @@ drivers::CCanMask g_canMon(can, g_canMonitorSubscribers, PC_0);
 utils::CTask *g_taskList[] = {
 
     &g_blinker,
-    &g_imu,
+    //&g_imu,
     &g_robotstatemachine,
     &g_resourceMonitor,
     &g_alerts,
